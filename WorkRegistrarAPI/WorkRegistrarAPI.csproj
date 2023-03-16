@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Authors>
+			<Developer>
+				<Name>Molnár Kristóf Ferenc</Name>
+				<NeptunId>OHZE4d</NeptunId>
+			</Developer>
+			<Developer>
+				<Name>Fekete Adrián</Name>
+				<NeptunId>CH5BR5</NeptunId>
+			</Developer>
+			<Developer>
+				<Name>Lélek Hunor Kadosac</Name>
+				<NeptunId></NeptunId>
+			</Developer>
+		</Authors>
+		<Description>
+			This is an API for a car mechanic company where an job regitrar can manage a current states of jobs, and create new ones.
+		</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	</ItemGroup>
+
+</Project>
