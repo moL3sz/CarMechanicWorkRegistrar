@@ -28,10 +28,10 @@ namespace WorkRegistrarAPI.Models
         public string LicencePlateNumber { get; set; }
 
         [Required(ErrorMessage = "A gyártási év kötelező")]
-        public int ManuFactureYear { get; set; }
+        public int ManufactureYear { get; set; }
 
         [Required(ErrorMessage = "A munka típsua kötelező!")]
-        public WorkCatagory WorkCatagory;
+        public WorkCatagory WorkCatagory { get; set; }
 
         [DefaultValue(WorkStatus.ACCEPTED)]
         public WorkStatus WorkStatus { get; set; }
@@ -48,10 +48,7 @@ namespace WorkRegistrarAPI.Models
         public DateTime CreatedDate { get; set; }
 
         [NotMapped]
-        public int CarAge => DateTime.Now.Year - this.ManuFactureYear;
-
-
-
+        public int CarAge => DateTime.Now.Year - this.ManufactureYear;
 
         [NotMapped]
         public double WorktimeEstimination
