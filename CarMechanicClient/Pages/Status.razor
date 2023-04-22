@@ -1,7 +1,45 @@
 ﻿@page "/"
+@inject HttpClient Http
+@using Models
+@using Data
 
-<h3>Status</h3>
+<PageTitle>Status</PageTitle>
+
+<h1>Status</h1>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Client First Name</th>
+                <th>Client Last Name</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.FirstName</td>
+                    <td>@forecast.LastName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
+    private WorkFlow[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<WorkFlow[]>(GlobalStaticVariables.apiURL);
+    }
 
 }
