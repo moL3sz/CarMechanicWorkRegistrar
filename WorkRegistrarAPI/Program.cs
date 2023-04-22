@@ -4,7 +4,9 @@ using WorkRegistrarAPI.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddNewtonsoftJson();
 builder.Services.AddDbContext<PitStopContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -25,7 +27,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+// Add default route using convention-based routing
 app.MapControllers();
+
 
 app.Run();
