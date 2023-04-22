@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkRegistrarAPI.Data;
 
@@ -11,9 +12,10 @@ using WorkRegistrarAPI.Data;
 namespace WorkRegistrarAPI.Migrations
 {
     [DbContext(typeof(PitStopContext))]
-    partial class PitStopContextModelSnapshot : ModelSnapshot
+    [Migration("20230422162631_a")]
+    partial class a
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

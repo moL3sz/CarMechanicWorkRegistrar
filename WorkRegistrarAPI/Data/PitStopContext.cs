@@ -14,6 +14,7 @@ namespace WorkRegistrarAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Workflow>().Property(t => t.WorkCatagory).HasConversion<int>();
             base.OnModelCreating(modelBuilder);
         }
     }
