@@ -1,0 +1,83 @@
+﻿@page "/worktable"
+@inject HttpClient Http
+@using System.ComponentModel.DataAnnotations;
+@using System.ComponentModel;
+
+
+<PageTitle>Felvett munkák</PageTitle>
+
+<h1>Felvett munkák</h1>
+
+@if (workFlow == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Car type and license plate number</th>
+                <th>Year of manufacture</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{/*
+            @foreach (var work in workFlow)
+            {
+                <tr>
+                    <td>@work.Date.ToShortDateString()</td>
+                    <td>@work.TemperatureC</td>
+                    <td>@work.TemperatureF</td>
+                    <td>@work.Summary</td>
+                </tr>
+            }*/}
+        </tbody>
+    </table>
+}
+
+@code {
+    private WorkFlow[]? workFlow;
+
+    /*protected override async Task OnInitializedAsync()
+    {
+        workFlow = await Http.GetFromJsonAsync<WorkFlow[]>("sample-data/weather.json");
+    }*/
+
+    public class WorkFlow
+    {
+        [DisplayName("Vezetéknév")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Use letters only please")]
+        public string FirstName { get; set; }
+
+        [DisplayName("Keresztnév")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Use letters only please")]
+        public string LastName { get; set; }
+
+        [DisplayName("Autó típusa")]
+        public string CarType { get; set; }
+        
+        [DisplayName("Rendszám")]
+        public string LicensePlateNumber { get; set; }
+
+        [DisplayName("Gyártási év")]
+        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
+        public int YearOfManufacture { get; set; }
+
+        [DisplayName("Munka kategória")]
+        [Required]
+        public string WorkType { get; set; }
+
+        [DisplayName("Hiba rövid leírása")]
+        [Required]
+        public string ProblemDescription { get; set; }
+
+        [DisplayName("Hiba súlyossága")]
+        [Required]
+        [Range(1, 10)]
+        public int HowBadIsIt { get; set; }
+    }
+}
