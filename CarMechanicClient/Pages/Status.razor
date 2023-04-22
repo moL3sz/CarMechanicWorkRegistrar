@@ -18,16 +18,14 @@ else
             <tr>
                 <th>Client First Name</th>
                 <th>Client Last Name</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var forecast in forecasts)
             {
                 <tr>
-                    <td>@forecast.FirstName</td>
-                    <td>@forecast.LastName</td>
+                    <td>@forecast.ClientFirstName</td>
+                    <td>@forecast.ClientLastName</td>
                 </tr>
             }
         </tbody>
@@ -35,11 +33,11 @@ else
 }
 
 @code {
-    private WorkFlow[]? forecasts;
+    private Workflow[]? forecasts;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WorkFlow[]>(GlobalStaticVariables.apiURL);
+            forecasts = await Http.GetFromJsonAsync<Workflow[]>(GlobalStaticVariables.apiURL);
     }
 
 }
