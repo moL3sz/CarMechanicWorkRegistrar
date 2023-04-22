@@ -1,9 +1,41 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<h2>Autó javítás felvétele</h2>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<form method="post">
+    <div class="form-group">
+        <label for="name">Név:</label>
+        <input type="text" class="form-control" id="name" name="Name" required>
+    </div>
+    <div class="form-group">
+        <label for="carType">Autó típusa:</label>
+        <input type="text" class="form-control" id="carType" name="CarType" required>
+    </div>
+    <div class="form-group">
+        <label for="licensePlate">Rendszám:</label>
+        <input type="text" class="form-control" id="licensePlate" name="LicensePlate" required>
+    </div>
+    <div class="form-group">
+        <label for="year">Gyártási év:</label>
+        <input type="number" class="form-control" id="year" name="Year" required>
+    </div>
+    <div class="form-group">
+        <label for="jobCategory">Munka kategóriája:</label>
+        <select class="form-control" id="jobCategory" name="JobCategory" required>
+            <option value="">Válasszon egy lehetőséget</option>
+            <option value="Elektromos javítás">Futómű javítás</option>
+            <option value="Motor javítás">Motor javítás</option>
+            <option value="Karosszéria javítás">Karosszéria javítás</option>
+            <option value="Fék javítás">Fékberendezés javítás</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="problemDescription">Hiba leírása:</label>
+        <textarea class="form-control" id="problemDescription" name="ProblemDescription" rows="3" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="severity">Hibasúlyosság:</label>
+        <input type="range" class="form-control-range" id="severity" name="Severity" min="1" max="10" value="5">
+    </div>
+    <button type="submit" class="btn btn-primary">Javítás felvétele</button>
+</form>

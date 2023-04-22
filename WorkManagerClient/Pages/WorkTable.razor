@@ -1,0 +1,49 @@
+﻿@page "/worktable"
+@inject HttpClient Http
+@using System.ComponentModel.DataAnnotations;
+@using System.ComponentModel;
+@using Models;
+
+<PageTitle>Felvett munkák</PageTitle>
+
+<h1>Felvett munkák</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Car type and license plate number</th>
+            <th>Year of manufacture</th>
+            <th>Work type</th>
+            <th>Problem description</th>
+            <th>How bad is it</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            
+
+        @foreach (var work in workFlow)
+        {
+            <tr>
+                <td>@work.FirstName + " " + @work.LastName</td>
+                <td>@work.CarType + " " + @work.LicensePlateNumber</td>
+                <td>@work.YearOfManufacture</td>
+                <td>@work.WorkType</td>
+                <td>@work.ProblemDescription</td>
+                <td>@work.HowBadIsIt</td>
+                <td><input type="button" value="Edit"/></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@code {
+    private WorkFlow[]? workFlow = new WorkFlow[0];
+
+    /*protected override async Task OnInitializedAsync()
+        {
+        workFlow = await Http.GetFromJsonAsync<WorkFlow[]>("sample-data/weather.json");
+    }*/
+}
