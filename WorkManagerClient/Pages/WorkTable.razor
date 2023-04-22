@@ -2,7 +2,7 @@
 @inject HttpClient Http
 @using System.ComponentModel.DataAnnotations;
 @using System.ComponentModel;
-
+@using WorkManagerClient.Extensions
 
 <PageTitle>Felvett munkák</PageTitle>
 
@@ -20,20 +20,26 @@ else
                 <th>Name</th>
                 <th>Car type and license plate number</th>
                 <th>Year of manufacture</th>
-                <th>Summary</th>
+                <th>Work type</th>
+                <th>Problem description</th>
+                <th>How bad is it</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            @{/*
+            
             @foreach (var work in workFlow)
             {
                 <tr>
-                    <td>@work.Date.ToShortDateString()</td>
-                    <td>@work.TemperatureC</td>
-                    <td>@work.TemperatureF</td>
-                    <td>@work.Summary</td>
+                    <td>@work.FirstName + " " + @work.LastName</td>
+                    <td>@work.CarType + " " + @work.LicensePlateNumber</td>
+                    <td>@work.YearOfManufacture</td>
+                    <td>@work.WorkType</td>
+                    <td>@work.ProblemDescription</td>
+                    <td>@work.HowBadIsIt</td>
+                    <td><input type="button" value="Edit"/></td>
                 </tr>
-            }*/}
+            }
         </tbody>
     </table>
 }
