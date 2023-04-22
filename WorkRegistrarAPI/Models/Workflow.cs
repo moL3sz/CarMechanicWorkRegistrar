@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 using WorkRegistrarAPI.Data;
@@ -32,6 +33,9 @@ namespace WorkRegistrarAPI.Models
         [Required(ErrorMessage = "A munka típsua kötelező!")]
         public WorkCatagory WorkCatagory;
 
+        [DefaultValue(WorkStatus.ACCEPTED)]
+        public WorkStatus WorkStatus { get; set; }
+
         [Required(ErrorMessage = "A leírás kötelező")]
         public string Description { get; set; }
 
@@ -45,6 +49,8 @@ namespace WorkRegistrarAPI.Models
 
         [NotMapped]
         public int CarAge => DateTime.Now.Year - this.ManuFactureYear;
+
+
 
 
         [NotMapped]
