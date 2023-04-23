@@ -43,5 +43,11 @@ namespace WorkManagerClient.Models
         public short IssueSeriousness { get; set; }
 
         public DateTime CreatedDate { get; set; }
+
+        public bool Active { get; set; }
+
+        [DefaultValue(WorkStatus.ACCEPTED)]
+        [EnumDataType(typeof(WorkStatus), ErrorMessage = "Rossz munka státuszt adott meg!")]
+        public WorkStatus WorkStatus { get; set; }
     }
 }
