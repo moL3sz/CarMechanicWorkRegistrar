@@ -1,8 +1,8 @@
 ﻿
-using WorkRegistrarAPI.Enums;
-
 namespace WorkRegistrarAPI.Data
 {
+    using WorkRegistrarAPI.Enums;
+
     public class GlobalStaticVariables
     {
         public static Dictionary<WorkCatagory, long> WORKCATEGORY_HOURS = new Dictionary<WorkCatagory, long>
