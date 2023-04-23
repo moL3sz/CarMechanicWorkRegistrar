@@ -18,5 +18,9 @@
         /// </summary>
         public int PageNumber { get; set; } = 1;
 
+        public string? Orderfield { get; set; }
+
+        public bool OrderDescand { get; set; } = false;
+
     }
 }
