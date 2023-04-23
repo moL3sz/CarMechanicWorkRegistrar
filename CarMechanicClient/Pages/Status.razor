@@ -61,8 +61,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        jobs = await Http.GetFromJsonAsync<Workflow[]>(GlobalStaticVariables.apiURL);
+        await getDataFromDatabase(10,"",true);
         attributeManager = new AttributeManager();
+    }
+
+    private async Task getDataFromDatabase(int pageSize_, string orderField_, bool orderDescend_)
+    {
+        var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiURL + "/GetWorkflows", new { PageSize = pageSize_, OrderField = orderField_, OrderDescend = orderDescend_ });
+        jobs = await response.Content.ReadFromJsonAsync<Workflow[]>();
     }
 
     private void ProceedWorkStatus(MouseEventArgs e, Workflow job)
