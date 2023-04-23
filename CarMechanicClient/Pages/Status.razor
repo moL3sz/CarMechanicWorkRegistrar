@@ -61,7 +61,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await getDataFromDatabase(10,"Null",true);
+        await getDataFromDatabase(10, "ClientFirstName", true);
     }
 
     private async Task getDataFromDatabase(int pageSize_, string orderField_, bool orderDescend_)
@@ -89,8 +89,7 @@ else
             attributeManager.attribute[bId].setSortIndicator(1);
             attributeManager.activeAttributeId = bId;
         }
-
-        await getDataFromDatabase(10,attributeManager.getActiveName(),attributeManager.getActiveDescending());
+        await getDataFromDatabase(10,attributeManager.getActiveVariableName(),attributeManager.getActiveDescending());
     }
 
     private string IndicatorInterpreter(int indicatorNumber)
@@ -104,17 +103,21 @@ else
     {
         public class Attribute
         {
-            private string name;
+            private string fieldName;
+            private string variableName;
             private int sortIndicator = 0; //0-NoSort 1-Increase 2-Decrease
 
-            public Attribute(string name_)
+            public Attribute(string fieldName_, string variableName_)
             {
-                name = name_;
+                fieldName = fieldName_;
+                variableName = variableName_;
             }
 
             //Van jobb mód a getterek és setterekre?
-            public string getName() { return name; }
-            public void setName(string value) { name = value; }
+            public string getFieldName() { return fieldName; }
+            public void setFieldName(string value) { fieldName = value; }
+            public string getVariableName() { return variableName; }
+            public void setVariableName(string value) { variableName = value; }
             public int getSortIndicator() { return sortIndicator; }
             public void setSortIndicator(int value) { sortIndicator = value; }
 
@@ -127,7 +130,7 @@ else
 
             public string show()
             {
-                return name + getSimbol();
+                return getFieldName() + getSimbol();
             }
         }
 
@@ -135,23 +138,25 @@ else
 
         public AttributeManager()
         {
-            attribute[0] = new Attribute("Client First Name");
-            attribute[1] = new Attribute("Client Last Name");
-            attribute[2] = new Attribute("Car Type");
-            attribute[3] = new Attribute("Licence Plate Number");
-            attribute[4] = new Attribute("Manufacture Year");
-            attribute[5] = new Attribute("Work Catagory");
-            attribute[6] = new Attribute("Description");
-            attribute[7] = new Attribute("Issue Seriousness");
-            attribute[8] = new Attribute("CreatedDate");
-            attribute[9] = new Attribute("Work Status");
+            attribute[0] = new Attribute("Client First Name", "ClientFirstName");
+            attribute[1] = new Attribute("Client Last Name", "ClientLastName");
+            attribute[2] = new Attribute("Car Type", "CarType");
+            attribute[3] = new Attribute("Licence Plate Number", "LicencePlateNumber");
+            attribute[4] = new Attribute("Manufacture Year", "ManufactureYear");
+            attribute[5] = new Attribute("Work Catagory", "WorkCatagory");
+            attribute[6] = new Attribute("Description", "Description");
+            attribute[7] = new Attribute("Issue Seriousness", "IssueSeriousness");
+            attribute[8] = new Attribute("Created Date", "CreatedDate");
+            attribute[9] = new Attribute("Work Status", "WorkStatus");
+
+            attribute[0].setSortIndicator(1);
         }
 
         public int activeAttributeId = 0;
 
-        public string getActiveName()
+        public string getActiveVariableName()
         {
-            return attribute[activeAttributeId].getName();
+            return attribute[activeAttributeId].getVariableName();
         }
         public bool getActiveDescending()
         {
