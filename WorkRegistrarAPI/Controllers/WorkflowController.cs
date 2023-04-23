@@ -58,6 +58,13 @@
             return await this._context.Workflows.Where(x => x.Active).CountAsync();
         }
 
+
+        [HttpGet("[action]/{id}")]
+        public async Task<Workflow> GetWorkflow([FromRoute] int id)
+        {
+            return await _context.Workflows.FindAsync(id);
+        }
+
         // POST: api/Workflow/Update?{workflow}
         [HttpPost]
         public async Task<IActionResult> Insert(Workflow workflow)
