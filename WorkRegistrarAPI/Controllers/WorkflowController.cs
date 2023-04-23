@@ -59,7 +59,7 @@
         }
 
 
-        [HttpGet("[action]/{id}")]
+        [HttpGet("{id}")]
         public async Task<Workflow> GetWorkflow([FromRoute] int id)
         {
             return await _context.Workflows.FindAsync(id);
