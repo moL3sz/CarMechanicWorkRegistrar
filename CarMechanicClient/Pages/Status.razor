@@ -39,7 +39,7 @@ else
                     <td>@job.LicencePlateNumber</td>
                     <td>@job.ManuFactureYear</td>
                     <td>@job.WorkCatagory</td>
-                    <td>@job.Description</td>
+                    <td @onclick=@(e=>clickOnDescription(e,job.WorkflowId))>@textShortener(job.WorkflowId,job.Description)</td>
                     <td>@job.IssueSeriousness</td>
                     <td>@job.CreatedDate</td>
                     <button class="btn btn-info" @onclick=@(e=>ProceedWorkStatus(e,job))>@job.WorkStatus</button>
@@ -52,12 +52,9 @@ else
 @code {
 
     private Workflow[]? jobs;
-    private int[] sortButtonIndicator = new int[10];
-    private string activeSortButton = "None";
-    private int activeSortButtonNumber = 0;
-    private bool sortIncreasing = true;
-
     private AttributeManager attributeManager = new AttributeManager();
+    private int selectedDescription = -1;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -66,7 +63,7 @@ else
 
     private async Task getDataFromDatabase(int pageSize_, string orderField_, bool orderDescend_)
     {
-        var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiURL + "/GetWorkflows", new { PageSize = pageSize_, OrderField = orderField_, OrderDescend = orderDescend_ });
+        var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiURL + "/GetWorkflows", new { PageSize = pageSize_, OrderField = orderField_, OrderDescand = orderDescend_ });
         jobs = await response.Content.ReadFromJsonAsync<Workflow[]>();
     }
 
@@ -92,12 +89,24 @@ else
         await getDataFromDatabase(10,attributeManager.getActiveVariableName(),attributeManager.getActiveDescending());
     }
 
-    private string IndicatorInterpreter(int indicatorNumber)
+    private string textShortener(int id,string text)
     {
-        if (indicatorNumber == 0) return "-";
-        else if (indicatorNumber == 1) return "^";
-        else return "ˇ";
+        if (selectedDescription != id && text.Length > 20)
+        {
+            text = text.Substring(0, 20);
+            text = text + "...";
+        }
+        return text;
     }
+
+    private void clickOnDescription(MouseEventArgs e, int id)
+    {
+        if (selectedDescription == id) selectedDescription = -1;
+        else selectedDescription = id;
+    }
+
+
+
 
     public class AttributeManager
     {
@@ -105,7 +114,7 @@ else
         {
             private string fieldName;
             private string variableName;
-            private int sortIndicator = 0; //0-NoSort 1-Increase 2-Decrease
+            private int sortIndicator = 0; //0-NoSort 1-Decrease 2-Increase
 
             public Attribute(string fieldName_, string variableName_)
             {
@@ -124,8 +133,8 @@ else
             public string getSimbol()
             {
                 if (sortIndicator == 0) return "-";
-                else if (sortIndicator == 1) return "^";
-                else return "ˇ";
+                else if (sortIndicator == 1) return "ˇ";
+                else return "^";
             }
 
             public string show()
@@ -160,8 +169,8 @@ else
         }
         public bool getActiveDescending()
         {
-            if (attribute[activeAttributeId].getSortIndicator() == 1) return true;
-            else return false;
+            if (attribute[activeAttributeId].getSortIndicator() == 1) return false;
+            else return true;
         }
     }
 }
