@@ -5,6 +5,7 @@
     using Microsoft.EntityFrameworkCore;
     using WorkRegistrarAPI.Data;
     using WorkRegistrarAPI.Enums;
+    using WorkRegistrarAPI.Extensions;
     using WorkRegistrarAPI.Models;
 
     [ApiController]
@@ -30,6 +31,17 @@
         public async Task<List<Workflow>> GetWorkflows(DataLoaderOptions options)
         {
             List<Workflow> workflows = await _context.Workflows.Where(x => x.Active).ToListAsync();
+
+            if (options.Orderfield != null)
+            {
+                workflows = workflows.OrderBy(options.Orderfield).ToList();
+            }
+
+            if (options.OrderDescand)
+            {
+                workflows.Reverse();
+            }
+
             return workflows
                 .Skip((options.PageNumber - 1) * options.PageSize)
                 .Take(options.PageSize)
@@ -78,7 +90,8 @@
         {
             this._logger.LogInformation($"[*] Update begin with values: {JsonSerializer.Serialize(workflow)}");
 
-            try{
+            try
+            {
 
                 // set up new w
                 this._context.Update(workflow);
