@@ -57,12 +57,11 @@ else
     private int activeSortButtonNumber = 0;
     private bool sortIncreasing = true;
 
-    private AttributeManager attributeManager;
+    private AttributeManager attributeManager = new AttributeManager();
 
     protected override async Task OnInitializedAsync()
     {
-        await getDataFromDatabase(10,"",true);
-        attributeManager = new AttributeManager();
+        await getDataFromDatabase(10,"Null",true);
     }
 
     private async Task getDataFromDatabase(int pageSize_, string orderField_, bool orderDescend_)
@@ -77,7 +76,7 @@ else
         //TODO: Change WorkStatus
     }
 
-    private void SortColumn(MouseEventArgs e, int bId)
+    private async Task SortColumn(MouseEventArgs e, int bId)
     {
         if(attributeManager.activeAttributeId == bId)
         {
@@ -91,24 +90,7 @@ else
             attributeManager.activeAttributeId = bId;
         }
 
-        // @attributeManager.attribute[0].show()
-
-        /*
-            sortButtonIndicator[activeSortButtonNumber] = 0;
-            activeSortButtonNumber = buttonNumber;
-            if(activeSortButton == buttonName)
-            {
-            sortIncreasing = false;
-            sortButtonIndicator[activeSortButtonNumber] = 2;
-            //TODO: Send sorting (string buttonName , bool sortIncreasing)
-            }
-            else
-            {
-            sortIncreasing = true;
-            sortButtonIndicator[activeSortButtonNumber] = 1;
-            activeSortButton = buttonName;
-            //TODO: Send sorting (string buttonName , bool sortIncreasing)
-        }*/
+        await getDataFromDatabase(10,attributeManager.getActiveName(),attributeManager.getActiveDescending());
     }
 
     private string IndicatorInterpreter(int indicatorNumber)
@@ -122,19 +104,15 @@ else
     {
         public class Attribute
         {
-            private int id;
             private string name;
             private int sortIndicator = 0; //0-NoSort 1-Increase 2-Decrease
 
-            public Attribute(int id_, string name_)
+            public Attribute(string name_)
             {
-                id = id_;
                 name = name_;
             }
 
             //Van jobb mód a getterek és setterekre?
-            public int getId() { return id; }
-            public void setId(int value) { id = value; }
             public string getName() { return name; }
             public void setName(string value) { name = value; }
             public int getSortIndicator() { return sortIndicator; }
@@ -157,18 +135,28 @@ else
 
         public AttributeManager()
         {
-            attribute[0] = new Attribute(0, "Client First Name");
-            attribute[1] = new Attribute(1, "Client Last Name");
-            attribute[2] = new Attribute(2, "Car Type");
-            attribute[3] = new Attribute(3, "Licence Plate Number");
-            attribute[4] = new Attribute(4, "Manufacture Year");
-            attribute[5] = new Attribute(5, "Work Catagory");
-            attribute[6] = new Attribute(6, "Description");
-            attribute[7] = new Attribute(7, "Issue Seriousness");
-            attribute[8] = new Attribute(8, "CreatedDate");
-            attribute[9] = new Attribute(9, "Work Status");
+            attribute[0] = new Attribute("Client First Name");
+            attribute[1] = new Attribute("Client Last Name");
+            attribute[2] = new Attribute("Car Type");
+            attribute[3] = new Attribute("Licence Plate Number");
+            attribute[4] = new Attribute("Manufacture Year");
+            attribute[5] = new Attribute("Work Catagory");
+            attribute[6] = new Attribute("Description");
+            attribute[7] = new Attribute("Issue Seriousness");
+            attribute[8] = new Attribute("CreatedDate");
+            attribute[9] = new Attribute("Work Status");
         }
 
         public int activeAttributeId = 0;
+
+        public string getActiveName()
+        {
+            return attribute[activeAttributeId].getName();
+        }
+        public bool getActiveDescending()
+        {
+            if (attribute[activeAttributeId].getSortIndicator() == 1) return true;
+            else return false;
+        }
     }
 }
