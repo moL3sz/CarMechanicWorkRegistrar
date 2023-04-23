@@ -5,9 +5,9 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkRegistrarAPI", "WorkRegistrarAPI\WorkRegistrarAPI.csproj", "{1BF5F149-CC55-4845-91C6-E22AC762CCA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkManagerClient", "WorkManagerClient\WorkManagerClient.csproj", "{49E1E70D-8CAF-49D3-969D-A7308D6329FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkManagerClient", "WorkManagerClient\WorkManagerClient.csproj", "{49E1E70D-8CAF-49D3-969D-A7308D6329FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarMechanicClient", "CarMechanicClient\CarMechanicClient.csproj", "{6C066663-AB8A-4B9A-B9B4-8677333BB243}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarMechanicClient", "CarMechanicClient\CarMechanicClient.csproj", "{6C066663-AB8A-4B9A-B9B4-8677333BB243}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
