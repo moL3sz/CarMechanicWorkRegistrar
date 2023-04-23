@@ -39,7 +39,7 @@ else
                     <td>@job.LicencePlateNumber</td>
                     <td>@job.ManuFactureYear</td>
                     <td>@job.WorkCatagory</td>
-                    <td>@job.Description</td>
+                    <td @onclick=@(e=>clickOnDescription(e,job.WorkflowId))>@textShortener(job.WorkflowId,job.Description)</td>
                     <td>@job.IssueSeriousness</td>
                     <td>@job.CreatedDate</td>
                     <button class="btn btn-info" @onclick=@(e=>ProceedWorkStatus(e,job))>@job.WorkStatus</button>
@@ -52,17 +52,19 @@ else
 @code {
 
     private Workflow[]? jobs;
-    private int[] sortButtonIndicator = new int[10];
-    private string activeSortButton = "None";
-    private int activeSortButtonNumber = 0;
-    private bool sortIncreasing = true;
+    private AttributeManager attributeManager = new AttributeManager();
+    private int selectedDescription = -1;
 
-    private AttributeManager attributeManager;
 
     protected override async Task OnInitializedAsync()
     {
-        jobs = await Http.GetFromJsonAsync<Workflow[]>(GlobalStaticVariables.apiURL);
-        attributeManager = new AttributeManager();
+        await getDataFromDatabase(10, "ClientFirstName", true);
+    }
+
+    private async Task getDataFromDatabase(int pageSize_, string orderField_, bool orderDescend_)
+    {
+        var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiURL + "/GetWorkflows", new { PageSize = pageSize_, OrderField = orderField_, OrderDescand = orderDescend_ });
+        jobs = await response.Content.ReadFromJsonAsync<Workflow[]>();
     }
 
     private void ProceedWorkStatus(MouseEventArgs e, Workflow job)
@@ -71,7 +73,7 @@ else
         //TODO: Change WorkStatus
     }
 
-    private void SortColumn(MouseEventArgs e, int bId)
+    private async Task SortColumn(MouseEventArgs e, int bId)
     {
         if(attributeManager.activeAttributeId == bId)
         {
@@ -84,66 +86,60 @@ else
             attributeManager.attribute[bId].setSortIndicator(1);
             attributeManager.activeAttributeId = bId;
         }
-
-        // @attributeManager.attribute[0].show()
-
-        /*
-            sortButtonIndicator[activeSortButtonNumber] = 0;
-            activeSortButtonNumber = buttonNumber;
-            if(activeSortButton == buttonName)
-            {
-            sortIncreasing = false;
-            sortButtonIndicator[activeSortButtonNumber] = 2;
-            //TODO: Send sorting (string buttonName , bool sortIncreasing)
-            }
-            else
-            {
-            sortIncreasing = true;
-            sortButtonIndicator[activeSortButtonNumber] = 1;
-            activeSortButton = buttonName;
-            //TODO: Send sorting (string buttonName , bool sortIncreasing)
-        }*/
+        await getDataFromDatabase(10,attributeManager.getActiveVariableName(),attributeManager.getActiveDescending());
     }
 
-    private string IndicatorInterpreter(int indicatorNumber)
+    private string textShortener(int id,string text)
     {
-        if (indicatorNumber == 0) return "-";
-        else if (indicatorNumber == 1) return "^";
-        else return "ˇ";
+        if (selectedDescription != id && text.Length > 20)
+        {
+            text = text.Substring(0, 20);
+            text = text + "...";
+        }
+        return text;
     }
+
+    private void clickOnDescription(MouseEventArgs e, int id)
+    {
+        if (selectedDescription == id) selectedDescription = -1;
+        else selectedDescription = id;
+    }
+
+
+
 
     public class AttributeManager
     {
         public class Attribute
         {
-            private int id;
-            private string name;
-            private int sortIndicator = 0; //0-NoSort 1-Increase 2-Decrease
+            private string fieldName;
+            private string variableName;
+            private int sortIndicator = 0; //0-NoSort 1-Decrease 2-Increase
 
-            public Attribute(int id_, string name_)
+            public Attribute(string fieldName_, string variableName_)
             {
-                id = id_;
-                name = name_;
+                fieldName = fieldName_;
+                variableName = variableName_;
             }
 
             //Van jobb mód a getterek és setterekre?
-            public int getId() { return id; }
-            public void setId(int value) { id = value; }
-            public string getName() { return name; }
-            public void setName(string value) { name = value; }
+            public string getFieldName() { return fieldName; }
+            public void setFieldName(string value) { fieldName = value; }
+            public string getVariableName() { return variableName; }
+            public void setVariableName(string value) { variableName = value; }
             public int getSortIndicator() { return sortIndicator; }
             public void setSortIndicator(int value) { sortIndicator = value; }
 
             public string getSimbol()
             {
                 if (sortIndicator == 0) return "-";
-                else if (sortIndicator == 1) return "^";
-                else return "ˇ";
+                else if (sortIndicator == 1) return "ˇ";
+                else return "^";
             }
 
             public string show()
             {
-                return name + getSimbol();
+                return getFieldName() + getSimbol();
             }
         }
 
@@ -151,18 +147,30 @@ else
 
         public AttributeManager()
         {
-            attribute[0] = new Attribute(0, "Client First Name");
-            attribute[1] = new Attribute(1, "Client Last Name");
-            attribute[2] = new Attribute(2, "Car Type");
-            attribute[3] = new Attribute(3, "Licence Plate Number");
-            attribute[4] = new Attribute(4, "Manufacture Year");
-            attribute[5] = new Attribute(5, "Work Catagory");
-            attribute[6] = new Attribute(6, "Description");
-            attribute[7] = new Attribute(7, "Issue Seriousness");
-            attribute[8] = new Attribute(8, "CreatedDate");
-            attribute[9] = new Attribute(9, "Work Status");
+            attribute[0] = new Attribute("Client First Name", "ClientFirstName");
+            attribute[1] = new Attribute("Client Last Name", "ClientLastName");
+            attribute[2] = new Attribute("Car Type", "CarType");
+            attribute[3] = new Attribute("Licence Plate Number", "LicencePlateNumber");
+            attribute[4] = new Attribute("Manufacture Year", "ManufactureYear");
+            attribute[5] = new Attribute("Work Catagory", "WorkCatagory");
+            attribute[6] = new Attribute("Description", "Description");
+            attribute[7] = new Attribute("Issue Seriousness", "IssueSeriousness");
+            attribute[8] = new Attribute("Created Date", "CreatedDate");
+            attribute[9] = new Attribute("Work Status", "WorkStatus");
+
+            attribute[0].setSortIndicator(1);
         }
 
         public int activeAttributeId = 0;
+
+        public string getActiveVariableName()
+        {
+            return attribute[activeAttributeId].getVariableName();
+        }
+        public bool getActiveDescending()
+        {
+            if (attribute[activeAttributeId].getSortIndicator() == 1) return false;
+            else return true;
+        }
     }
 }
