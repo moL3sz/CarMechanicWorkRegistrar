@@ -5,7 +5,6 @@
     using Microsoft.EntityFrameworkCore;
     using WorkRegistrarAPI.Data;
     using WorkRegistrarAPI.Enums;
-    using WorkRegistrarAPI.Extensions;
     using WorkRegistrarAPI.Models;
 
     [ApiController]
@@ -56,6 +55,13 @@
         public async Task<int> GetWorkflowSize()
         {
             return await this._context.Workflows.Where(x => x.Active).CountAsync();
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<Workflow> GetWorkflow([FromRoute] int id)
+        {
+            return await _context.Workflows.FindAsync(id);
         }
 
         // POST: api/Workflow/Update?{workflow}
