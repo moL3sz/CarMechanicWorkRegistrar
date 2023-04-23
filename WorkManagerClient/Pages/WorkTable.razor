@@ -3,6 +3,7 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.ComponentModel;
 @using Models;
+@using Data;
 
 <PageTitle>Felvett munkák</PageTitle>
 
@@ -26,12 +27,12 @@
         @foreach (var work in workFlow)
         {
             <tr>
-                <td>@work.FirstName + " " + @work.LastName</td>
-                <td>@work.CarType + " " + @work.LicensePlateNumber</td>
-                <td>@work.YearOfManufacture</td>
-                <td>@work.WorkType</td>
-                <td>@work.ProblemDescription</td>
-                <td>@work.HowBadIsIt</td>
+                <td>@work.ClientFirstName @work.ClientLastName</td>
+                <td>@work.CarType @work.LicencePlateNumber</td>
+                <td>@work.ManufactureYear</td>
+                <td>@work.WorkCatagory</td>
+                <td>@work.Description</td>
+                <td>@work.IssueSeriousness</td>
                 <td><input type="button" value="Edit"/></td>
             </tr>
         }
@@ -40,10 +41,11 @@
 
 
 @code {
-    private WorkFlow[]? workFlow = new WorkFlow[0];
+    private Workflow[]? workFlow = new Workflow[0];
 
-    /*protected override async Task OnInitializedAsync()
-        {
-        workFlow = await Http.GetFromJsonAsync<WorkFlow[]>("sample-data/weather.json");
-    }*/
+    protected override async Task OnInitializedAsync()
+    {
+    var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiurl + "/GetWorkflows", new { });
+    workFlow = await response.Content.ReadFromJsonAsync<Workflow[]>();
+    }
 }

@@ -1,44 +1,98 @@
 ﻿@page "/"
-@using Models;
+@using System.ComponentModel.DataAnnotations
+@using WorkManagerClient.Models
+@using Microsoft.Extensions.Logging
+@using Data;
+@inject HttpClient Http
+@inject ILogger<Index> Logger
+@inject NavigationManager Navigation
+
 
 <h2>Autó javítás felvétele</h2>
 
-<form method="post">
-    <div class="form-group">
-        <label for="name">Név:</label>
-        <input type="text" class="form-control" id="name" name="Name" required>
-    </div>
-    <div class="form-group">
-        <label for="carType">Autó típusa:</label>
-        <input type="text" class="form-control" id="carType" name="CarType" required>
-        <!--<ValidationMessage For="() => " />-->
-    </div>
-    <div class="form-group">
-        <label for="licensePlate">Rendszám:</label>
-        <input type="text" class="form-control" id="licensePlate" name="LicensePlate" required>
-    </div>
-    <div class="form-group">
-        <label for="year">Gyártási év:</label>
-        <input type="number" class="form-control" id="year" name="Year" required>
-    </div>
-    <div class="form-group">
-        <label for="jobCategory">Munka kategóriája:</label>
-        <select class="form-control" id="jobCategory" name="JobCategory" required>
-            <option value="">Válasszon egy lehetőséget</option>
-            <option value="Elektromos javítás">Futómű javítás</option>
-            <option value="Motor javítás">Motor javítás</option>
-            <option value="Karosszéria javítás">Karosszéria javítás</option>
-            <option value="Fék javítás">Fékberendezés javítás</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="problemDescription">Hiba leírása:</label>
-        <textarea class="form-control" id="problemDescription" name="ProblemDescription" rows="3" required></textarea>
-        <span id="severity-value"></span>
-    </div>
-    <div class="form-group">
-        <label for="severity">Hibasúlyosság:</label>
-        <input type="range" class="form-control-range" id="severity" name="Severity" min="1" max="10" value="5">
-    </div>
-    <button type="submit" class="btn btn-primary">Javítás felvétele</button>
-</form>
+<EditForm Model=@workflow OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <p>
+        <label>
+            Vezetéknév:
+            <InputText id="name" @bind-Value="workflow.ClientFirstName" />
+        </label>
+    </p>
+
+    <p>
+        <label>
+            Keresztnév:
+            <InputText id="name" @bind-Value="workflow.ClientLastName" />
+        </label>
+    </p>
+
+    <p>
+        <label>
+            Autó típusa:
+            <InputText id="name" @bind-Value="workflow.CarType" />
+        </label>
+    </p>
+
+    <p>
+        <label>
+            Rendszám:
+            <InputText id="name" @bind-Value="workflow.LicencePlateNumber" />
+        </label>
+    </p>
+
+    <p>
+        <label>
+            Gyártási év:
+            <InputNumber id="name" @bind-Value="workflow.ManufactureYear" />
+        </label>
+    </p>
+
+    <p>
+        <label>
+            Munka kategória:
+            <InputSelect id="name" @bind-Value="workflow.WorkCatagory" />
+        </label>
+    </p>
+
+    <p>
+        <label>
+            Az autó hibájának rövid leírása:
+            <InputText id="name" @bind-Value="workflow.Description" />
+        </label>
+    </p>
+
+    <p>
+        <label>
+            A hiba súlyossága (1-10):
+            <InputNumber id="name" @bind-Value="workflow.IssueSeriousness" />
+        </label>
+    </p>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private Workflow workflow = new();
+    public EditContext? editContext;
+
+    protected override void OnInitialized()
+    {
+        editContext = new(workflow);
+    }
+
+    private async void HandleValidSubmit()
+    {
+        var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiurl + "/Insert", workflow);
+
+        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            Navigation.NavigateTo("worktable");
+        }
+        else
+        {
+            Logger.LogInformation("Invalid submit");
+        }
+    }
+}
