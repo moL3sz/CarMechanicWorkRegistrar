@@ -80,8 +80,7 @@ else
     {
         if(job.WorkStatus != Enums.WorkStatus.DONE) job.WorkStatus++;
 
-        var requestContent = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>("workflowId", job.WorkflowId.ToString()) });
-        await Http.PutAsJsonAsync(GlobalStaticVariables.apiURL + "/UpdateStatus", requestContent);
+        await Http.PutAsJsonAsync(GlobalStaticVariables.apiURL + "/UpdateStatus/" + job.WorkflowId, new { });
     }
 
     private async Task SortColumn(MouseEventArgs e, int bId)
