@@ -20,7 +20,7 @@ namespace CarMechanicClient.Models
 
         public int ManuFactureYear { get; set; }
 
-        public WorkCatagory WorkCatagory;
+        public WorkCatagory WorkCatagory { get; set; }
 
         public WorkStatus WorkStatus { get; set; }
 
