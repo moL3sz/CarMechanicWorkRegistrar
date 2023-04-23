@@ -5,7 +5,6 @@
     using Microsoft.EntityFrameworkCore;
     using WorkRegistrarAPI.Data;
     using WorkRegistrarAPI.Enums;
-    using WorkRegistrarAPI.Extensions;
     using WorkRegistrarAPI.Models;
 
     [ApiController]

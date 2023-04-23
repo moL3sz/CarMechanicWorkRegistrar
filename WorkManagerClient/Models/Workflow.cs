@@ -1,40 +1,53 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using WorkManagerClient.Enums;
 
 namespace WorkManagerClient.Models
 {
-    public class WorkFlow
+    public class Workflow
     {
-        [DisplayName("Vezetéknév")]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Use letters only please")]
-        public string FirstName { get; set; }
+        [Key]
+        public int WorkflowId { get; set; }
 
-        [DisplayName("Keresztnév")]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Use letters only please")]
-        public string LastName { get; set; }
+        [Required(ErrorMessage = "A vezetéknév kötelező!")]
+        public string ClientFirstName { get; set; }
 
-        [DisplayName("Autó típusa")]
+        [Required(ErrorMessage = "A keresztnév kötelező!")]
+        public string ClientLastName { get; set; }
+
+        [Required(ErrorMessage = "Az autó típus kötelező!")]
         public string CarType { get; set; }
 
-        [DisplayName("Rendszám")]
-        public string LicensePlateNumber { get; set; }
+        [Required(ErrorMessage = "A rendszám kötelező!")]
+        [RegularExpression(pattern: "^[A-Z]{3}[- ]?[0-9]{3}", ErrorMessage = "A rendszám rossz formátumban van megadva! Példa: ABC-123")]
+        public string LicencePlateNumber { get; set; }
 
-        [DisplayName("Gyártási év")]
-        [Required]
-        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
-        public int YearOfManufacture { get; set; }
 
-        [DisplayName("Munka kategória")]
-        [Required]
-        public string WorkType { get; set; }
 
-        [DisplayName("Hiba rövid leírása")]
-        [Required]
-        public string ProblemDescription { get; set; }
+        //TODO
+        /*[Range(typeof(DateTime), DateTime.MinValue.ToString(), DateTime.Now.ToString(),
+        ErrorMessage = "Value for {0} must be between {1} and {2}")]*/
 
-        [DisplayName("Hiba súlyossága")]
+        [Required(ErrorMessage = "A gyártási év kötelező")]
+        public int ManufactureYear { get; set; }
+
+        [Required(ErrorMessage = "A munka típsua kötelező!")]
+        [EnumDataType(typeof(WorkCatagory), ErrorMessage = "Rossz munkakört adott meg!")]
+        public WorkCatagory WorkCatagory { get; set; }
+
+        [Required(ErrorMessage = "A leírás kötelező")]
+        public string Description { get; set; }
+
         [Required]
-        [Range(1, 10)]
-        public int HowBadIsIt { get; set; }
+        [Range(0, 10)]
+        public short IssueSeriousness { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public bool Active { get; set; }
+
+        [DefaultValue(WorkStatus.ACCEPTED)]
+        [EnumDataType(typeof(WorkStatus), ErrorMessage = "Rossz munka státuszt adott meg!")]
+        public WorkStatus WorkStatus { get; set; }
     }
 }
