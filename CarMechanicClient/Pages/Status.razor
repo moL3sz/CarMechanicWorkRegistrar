@@ -3,11 +3,12 @@
 @using Models
 @using Data
 
-<PageTitle>Status</PageTitle>
 
-<h1>Status</h1>
+<PageTitle>Job Status</PageTitle>
 
-@if (forecasts == null)
+<h1>Job Status</h1>
+
+@if (jobs == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -16,16 +17,32 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Client First Name</th>
-                <th>Client Last Name</th>
+                <td @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</td>
+                <td @onclick=@(e=>SortColumn(e,1))>@attributeManager.attribute[1].show()</td>
+                <td @onclick=@(e=>SortColumn(e,2))>@attributeManager.attribute[2].show()</td>
+                <td @onclick=@(e=>SortColumn(e,3))>@attributeManager.attribute[3].show()</td>
+                <td @onclick=@(e=>SortColumn(e,4))>@attributeManager.attribute[4].show()</td>
+                <td @onclick=@(e=>SortColumn(e,5))>@attributeManager.attribute[5].show()</td>
+                <td @onclick=@(e=>SortColumn(e,6))>@attributeManager.attribute[6].show()</td>
+                <td @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</td>
+                <td @onclick=@(e=>SortColumn(e,8))>@attributeManager.attribute[8].show()</td>
+                <td @onclick=@(e=>SortColumn(e,9))>@attributeManager.attribute[9].show()</td>
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var job in jobs)
             {
                 <tr>
-                    <td>@forecast.ClientFirstName</td>
-                    <td>@forecast.ClientLastName</td>
+                    <td>@job.ClientFirstName</td>
+                    <td>@job.ClientLastName</td>
+                    <td>@job.CarType</td>
+                    <td>@job.LicencePlateNumber</td>
+                    <td>@job.ManuFactureYear</td>
+                    <td>@job.WorkCatagory</td>
+                    <td>@job.Description</td>
+                    <td>@job.IssueSeriousness</td>
+                    <td>@job.CreatedDate</td>
+                    <button class="btn btn-info" @onclick=@(e=>ProceedWorkStatus(e,job))>@job.WorkStatus</button>
                 </tr>
             }
         </tbody>
@@ -33,11 +50,119 @@ else
 }
 
 @code {
-    private Workflow[]? forecasts;
+
+    private Workflow[]? jobs;
+    private int[] sortButtonIndicator = new int[10];
+    private string activeSortButton = "None";
+    private int activeSortButtonNumber = 0;
+    private bool sortIncreasing = true;
+
+    private AttributeManager attributeManager;
 
     protected override async Task OnInitializedAsync()
     {
-            forecasts = await Http.GetFromJsonAsync<Workflow[]>(GlobalStaticVariables.apiURL);
+        jobs = await Http.GetFromJsonAsync<Workflow[]>(GlobalStaticVariables.apiURL);
+        attributeManager = new AttributeManager();
     }
 
+    private void ProceedWorkStatus(MouseEventArgs e, Workflow job)
+    {
+        if(job.WorkStatus != Enums.WorkStatus.DONE) job.WorkStatus++;
+        //TODO: Change WorkStatus
+    }
+
+    private void SortColumn(MouseEventArgs e, int bId)
+    {
+        if(attributeManager.activeAttributeId == bId)
+        {
+            if(attributeManager.attribute[bId].getSortIndicator() == 1) attributeManager.attribute[bId].setSortIndicator(2);
+            else attributeManager.attribute[bId].setSortIndicator(1);
+        }
+        else
+        {
+            attributeManager.attribute[attributeManager.activeAttributeId].setSortIndicator(0);
+            attributeManager.attribute[bId].setSortIndicator(1);
+            attributeManager.activeAttributeId = bId;
+        }
+
+        // @attributeManager.attribute[0].show()
+
+        /*
+            sortButtonIndicator[activeSortButtonNumber] = 0;
+            activeSortButtonNumber = buttonNumber;
+            if(activeSortButton == buttonName)
+            {
+            sortIncreasing = false;
+            sortButtonIndicator[activeSortButtonNumber] = 2;
+            //TODO: Send sorting (string buttonName , bool sortIncreasing)
+            }
+            else
+            {
+            sortIncreasing = true;
+            sortButtonIndicator[activeSortButtonNumber] = 1;
+            activeSortButton = buttonName;
+            //TODO: Send sorting (string buttonName , bool sortIncreasing)
+        }*/
+    }
+
+    private string IndicatorInterpreter(int indicatorNumber)
+    {
+        if (indicatorNumber == 0) return "-";
+        else if (indicatorNumber == 1) return "^";
+        else return "ˇ";
+    }
+
+    public class AttributeManager
+    {
+        public class Attribute
+        {
+            private int id;
+            private string name;
+            private int sortIndicator = 0; //0-NoSort 1-Increase 2-Decrease
+
+            public Attribute(int id_, string name_)
+            {
+                id = id_;
+                name = name_;
+            }
+
+            //Van jobb mód a getterek és setterekre?
+            public int getId() { return id; }
+            public void setId(int value) { id = value; }
+            public string getName() { return name; }
+            public void setName(string value) { name = value; }
+            public int getSortIndicator() { return sortIndicator; }
+            public void setSortIndicator(int value) { sortIndicator = value; }
+
+            public string getSimbol()
+            {
+                if (sortIndicator == 0) return "-";
+                else if (sortIndicator == 1) return "^";
+                else return "ˇ";
+            }
+
+            public string show()
+            {
+                return name + getSimbol();
+            }
+        }
+
+        public Attribute[] attribute = new Attribute[10];
+
+        public AttributeManager()
+        {
+            attribute[0] = new Attribute(0, "Client First Name");
+            attribute[1] = new Attribute(1, "Client Last Name");
+            attribute[2] = new Attribute(2, "Car Type");
+            attribute[3] = new Attribute(3, "Licence Plate Number");
+            attribute[4] = new Attribute(4, "Manufacture Year");
+            attribute[5] = new Attribute(5, "Work Catagory");
+            attribute[6] = new Attribute(6, "Description");
+            attribute[7] = new Attribute(7, "Issue Seriousness");
+            attribute[8] = new Attribute(8, "CreatedDate");
+            attribute[9] = new Attribute(9, "Work Status");
+        }
+
+        public int activeAttributeId = 0;
+    }
 }
