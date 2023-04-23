@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
-
-namespace WorkRegistrarAPI.Enums
+﻿namespace WorkRegistrarAPI.Enums
 {
+    using System.ComponentModel;
+
     public enum WorkCatagory
     {
         [Description("Karosszéria")]

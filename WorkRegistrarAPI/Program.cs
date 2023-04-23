@@ -13,11 +13,11 @@ builder.Services
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
     });
 
-
 builder.Services.AddDbContext<PitStopContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -42,8 +42,8 @@ app.UseCors(options =>
 });
 
 app.UseAuthorization();
+
 // Add default route using convention-based routing
 app.MapControllers();
-
 
 app.Run();

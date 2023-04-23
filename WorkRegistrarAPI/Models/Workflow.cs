@@ -1,17 +1,24 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.CompilerServices;
-using WorkRegistrarAPI.Data;
-using WorkRegistrarAPI.Enums;
-
-namespace WorkRegistrarAPI.Models
+﻿namespace WorkRegistrarAPI.Models
 {
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using WorkRegistrarAPI.Data;
+    using WorkRegistrarAPI.Enums;
+
+    /// <summary>
+    /// A model mely tartalmazza azon adatokat amiket fel kell vinni egy új munka regiszztálásnál,
+    /// és azon számolt mezőket amik szükségesek a táblázatba.
+    /// </summary>
     public class Workflow
     {
         [Key]
         public int WorkflowId { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets ClientFirstName.
+        /// </summary>
         [Required(ErrorMessage = "A vezetéknév kötelező!")]
         public string ClientFirstName { get; set; }
 
@@ -47,8 +54,6 @@ namespace WorkRegistrarAPI.Models
 
         public DateTime CreatedDate { get; set; }
 
-
-        #region -------- Calcualted values ----------
         [NotMapped]
         public int CarAge => DateTime.Now.Year - this.ManufactureYear;
 
@@ -69,11 +74,8 @@ namespace WorkRegistrarAPI.Models
                 Console.WriteLine(ManufactureRate);
                 Console.WriteLine(IssueSeriousnessRate);
 
-
-
                 return CategoryHour * ManufactureRate * IssueSeriousnessRate;
             }
         }
-        #endregion -------- Calcualted values ----------
     }
 }

@@ -5,7 +5,6 @@
     using Microsoft.EntityFrameworkCore;
     using WorkRegistrarAPI.Data;
     using WorkRegistrarAPI.Enums;
-    using WorkRegistrarAPI.Extensions;
     using WorkRegistrarAPI.Models;
 
     [ApiController]
@@ -22,13 +21,11 @@
             _logger = logger;
         }
 
-        #region DatasourceLoader
-
         /// <summary>
-        ///  Lapozhatóssággal ellátva visszaadja a tábla adott oldali állapotát
+        ///  Lapozhatóssággal ellátva visszaadja a tábla adott oldali állapotát.
         /// </summary>
         /// <param name="options"></param>
-        /// <returns>Az adott szakasz a tábla valós állapotráról</returns>
+        /// <returns>Az adott szakasz a tábla valós állapotráról.</returns>
         [HttpPost]
         public async Task<List<Workflow>> GetWorkflows(DataLoaderOptions options)
         {
@@ -39,22 +36,17 @@
                 .ToList();
         }
 
-
-
         /// <summary>
-        /// Vissza adja hogy összes mennyi record van az adatzbázisban -> azért hogy ki tudjuk kliens oldalon számolni mennyi page gomb kerüljön majd fel
+        /// Vissza adja hogy összes mennyi record van az adatzbázisban -> azért hogy ki tudjuk kliens oldalon számolni mennyi page gomb kerüljön majd fel.
         /// </summary>
-        /// <returns>Összes record mennyisége</returns>
+        /// <returns>Összes record mennyisége.</returns>
         [HttpGet]
         public async Task<int> GetWorkflowSize()
         {
             return await this._context.Workflows.Where(x => x.Active).CountAsync();
         }
 
-        #endregion DatasourceLoader
-
-        #region WebApi Routes
-        // POST: api/Workflow/Update?{workflow} 
+        // POST: api/Workflow/Update?{workflow}
         [HttpPost]
         public async Task<IActionResult> Insert(Workflow workflow)
         {
@@ -65,13 +57,10 @@
 
                 // Set up default Genereted values
                 workflow.Active = true; // this is active, means it is not deleted yet
-                workflow.CreatedDate = DateTime.Now; // the creation date of the new record 
-
-
+                workflow.CreatedDate = DateTime.Now; // the creation date of the new record
 
                 await this._context.AddAsync(workflow);
                 await this._context.SaveChangesAsync();
-
 
                 return Ok();
             }
@@ -88,19 +77,19 @@
         public async Task<ActionResult> Update(Workflow workflow)
         {
             this._logger.LogInformation($"[*] Update begin with values: {JsonSerializer.Serialize(workflow)}");
-            try
-            {
+
+            try{
 
                 // set up new w
-                _context.Update(workflow);
+                this._context.Update(workflow);
                 await this._context.SaveChangesAsync();
-                return Ok(workflow);
+                return this.Ok(workflow);
 
             }
             catch (Exception ex)
             {
                 this._logger.LogError($"[-] Update failed with values: {JsonSerializer.Serialize(workflow)}", ex);
-                return BadRequest(500);
+                return this.BadRequest(500);
 
             }
         }
@@ -119,6 +108,7 @@
                     this._logger.LogError($"Workflow not found with ID: {workflowId}");
                     return BadRequest(500);
                 }
+
                 currentWorkflow.Active = false;
 
                 _context.Update(currentWorkflow);
@@ -148,7 +138,6 @@
                     return BadRequest(404);
                 }
 
-
                 // If the project is not in the DONE state, it will send to the next state
                 currentWorkflow.WorkStatus = ((int)currentWorkflow.WorkStatus) + 1 <= 2 ?
                     (WorkStatus)((int)currentWorkflow.WorkStatus) + 1 :
@@ -163,9 +152,8 @@
             {
                 this._logger.LogError(ex.Message, ex);
                 return BadRequest(500);
-            };
+            }
+;
         }
-
-        #endregion WebApi Routes
     }
 }
