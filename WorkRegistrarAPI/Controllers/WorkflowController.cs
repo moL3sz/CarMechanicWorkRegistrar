@@ -6,6 +6,7 @@
     using WorkRegistrarAPI.Data;
     using WorkRegistrarAPI.Enums;
     using WorkRegistrarAPI.Models;
+    using WorkRegistrarAPI.Extensions;
 
     [ApiController]
     [Route("api/[controller]/[action]")]
@@ -113,8 +114,8 @@
             }
         }
 
-        // DELETE: api/Workflow/Delete?workflowId=5
-        [HttpDelete]
+        // DELETE: api/Workflow/Delete/
+        [HttpDelete("{workflowId}")]
         public async Task<IActionResult> Delete(int workflowId)
         {
             this._logger.LogInformation($"[*] Delete begin with ID: {workflowId}");
@@ -143,9 +144,9 @@
             }
         }
 
-        // PUT: api/Workflow/UpdateStatus?workflowId=5
-        [HttpPut]
-        public async Task<IActionResult> UpdateStatus(int workflowId)
+        // PUT: api/Workflow/UpdateStatus/5
+        [HttpPut("{workflowId}")]
+        public async Task<IActionResult> UpdateStatus([FromRoute] int workflowId)
         {
             try
             {
