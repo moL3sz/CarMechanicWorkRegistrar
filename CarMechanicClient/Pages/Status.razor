@@ -3,11 +3,12 @@
 @using Models
 @using Data
 
-<PageTitle>Status</PageTitle>
 
-<h1>Status</h1>
+<PageTitle>Job Status</PageTitle>
 
-@if (forecasts == null)
+<h1>Job Status</h1>
+
+@if (jobs == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -16,16 +17,32 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Client First Name</th>
-                <th>Client Last Name</th>
+                <td><button class="btn btn-outline-dark" @onclick=@(e=>SortColumn(e,"ClientFirstName",0))>Client First Name</button></td>
+                <td><button class="btn btn-outline-dark" @onclick=@(e=>SortColumn(e,"ClientLastName",1))>Client First Name</button></td>
+                <td><button class="btn btn-outline-dark" @onclick=@(e=>SortColumn(e,"CarType",2))>Car Type</button></td>
+                <td><button class="btn btn-outline-dark" @onclick=@(e=>SortColumn(e,"LicencePlateNumber",3))>License Plate Number</button></td>
+                <td><button class="btn btn-outline-dark" @onclick=@(e=>SortColumn(e,"ManuFactureYear",4))>Manufacture Year</button></td>
+                <td><button class="btn btn-outline-dark" @onclick=@(e=>SortColumn(e,"WorkCatagory",5))>Work Category</button></td>
+                <td @onclick=@(e=>SortColumn(e,"Description",6))>Description @IndicatorInterpreter(sortButtonIndicator[6])</td>
+                <td><button class="btn btn-outline-dark" @onclick=@(e=>SortColumn(e,"IssueSeriousness",7))>Issue Seriousness</button></td>
+                <td><button class="btn btn-outline-dark" @onclick=@(e=>SortColumn(e,"CreatedDate",8))>Created Date</button></td>
+                <td><button class="btn btn-outline-dark" @onclick=@(e=>SortColumn(e,"WorkStatus",9))>Work Status</button></td>
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var job in jobs)
             {
                 <tr>
-                    <td>@forecast.ClientFirstName</td>
-                    <td>@forecast.ClientLastName</td>
+                    <td>@job.ClientFirstName</td>
+                    <td>@job.ClientLastName</td>
+                    <td>@job.CarType</td>
+                    <td>@job.LicencePlateNumber</td>
+                    <td>@job.ManuFactureYear</td>
+                    <td>@job.WorkCatagory</td>
+                    <td>@job.Description</td>
+                    <td>@job.IssueSeriousness</td>
+                    <td>@job.CreatedDate</td>
+                    <button class="btn btn-info" @onclick=@(e=>ProceedWorkStatus(e,job))>@job.WorkStatus</button>
                 </tr>
             }
         </tbody>
@@ -33,11 +50,73 @@ else
 }
 
 @code {
-    private Workflow[]? forecasts;
+    //Error: All work category is the same
+
+    private Workflow[]? jobs;
+    private int[] sortButtonIndicator = new int[10];
+    private string activeSortButton = "None";
+    private int activeSortButtonNumber = 0;
+    private bool sortIncreasing = true;
 
     protected override async Task OnInitializedAsync()
     {
-            forecasts = await Http.GetFromJsonAsync<Workflow[]>(GlobalStaticVariables.apiURL);
+        jobs = await Http.GetFromJsonAsync<Workflow[]>(GlobalStaticVariables.apiURL);
     }
 
+    private void ProceedWorkStatus(MouseEventArgs e, Workflow job)
+    {
+        if(job.WorkStatus != Enums.WorkStatus.DONE) job.WorkStatus++;
+        //TODO: Change WorkStatus
+    }
+
+    private void SortColumn(MouseEventArgs e, string buttonName,int buttonNumber)
+    {
+        sortButtonIndicator[activeSortButtonNumber] = 0;
+        activeSortButtonNumber = buttonNumber;
+        if(activeSortButton == buttonName)
+        {
+            sortIncreasing = false;
+            sortButtonIndicator[activeSortButtonNumber] = 2;
+            //TODO: Send sorting (string buttonName , bool sortIncreasing)
+        }
+        else
+        {
+            sortIncreasing = true;
+            sortButtonIndicator[activeSortButtonNumber] = 1;
+            activeSortButton = buttonName;
+            //TODO: Send sorting (string buttonName , bool sortIncreasing)
+        }
+    }
+
+    private string IndicatorInterpreter(int indicatorNumber)
+    {
+        if (indicatorNumber == 0) return "-";
+        else if (indicatorNumber == 1) return "^";
+        else return "ˇ";
+    }
+
+    class Attributum
+    {
+        int id;
+        string name;
+        int sortIndicator; //0-NoSort 1-Increase 2-Decrease
+    }
+
+
+
+    /*
+     * Trashcan:
+     * 
+        <th>Client First Name</th>
+        <th>Client Last Name</th>
+        <th>Car Type</th>
+        <th>License Plate Number</th>
+        <th>Manufacture Year</th>
+        <th>Work Category</th>
+        <th>Description</th>
+        <th>Issue Seriousness</th>
+        <th>Created Date</th>
+        <th>Work Status</th>
+    *
+    */
 }
