@@ -7,7 +7,6 @@
 @inject ILogger<Index> Logger
 @inject NavigationManager Navigation
 
-
 <h2>Autó javítás felvétele</h2>
 
 <EditForm Model=@workflow OnValidSubmit="@HandleValidSubmit">
@@ -98,4 +97,11 @@
             Logger.LogInformation("Invalid submit");
         }
     }
+
+    /*
+    public async void OnEditRowAsync(int id){
+        var response = await Http.GetFromJsonAsync<Workflow>(GlobalStaticVariables.apiurl + string.Format("/GetWorkflow/{0}", id));
+        workflow = response;
+    }
+    */
 }
