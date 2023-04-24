@@ -46,21 +46,42 @@ else
                     <button class="btn btn-info" @onclick=@(e=>ProceedWorkStatus(e,job))>@job.WorkStatus</button>
                 </tr>
             }
-            <tr>
-                <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Left </button> </td>
-                <td> @pageManager.showPageCount() </td>
-                <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Right </button> </td>
-            </tr>
+            
         </tbody>
+    </table>
+    <table class="options">
+        <thead>
+            <tr>
+                <td>
+                    <label for="pageSizeDropbox">Page size:</label>
+
+                    <select name="pageSizeDropbox" id="pageSizeDropbox">
+                        <option value="ps5">@dummy</option>
+                        <option value="ps10">10</option>
+                        <option value="ps15">15</option>
+                        <option value="ps30">30</option>
+                    </select>
+                </td>
+                <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button> </td>
+                <td> @pageManager.showPageCount() </td>
+                <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Next </button> </td>
+            </tr>
+        </thead>
     </table>
 }
 
 @code {
-
     private Workflow[]? jobs;
     private AttributeManager attributeManager = new AttributeManager();
     private PageManager pageManager = new PageManager();
     private int selectedDescription = -1;
+
+
+    public int dummy = 111;
+    public void test()
+    {
+        dummy = 55;
+    }
 
 
     protected override async Task OnInitializedAsync()
