@@ -3,6 +3,7 @@
 @using WorkManagerClient.Models
 @using Microsoft.Extensions.Logging
 @using Data;
+@using Enums;
 @inject HttpClient Http
 @inject ILogger<Index> Logger
 @inject NavigationManager Navigation
@@ -51,7 +52,12 @@
     <p>
         <label>
             Munka kategória:
-            <InputSelect id="name" @bind-Value="workflow.WorkCatagory" />
+            <InputSelect id="name" @bind-Value="workflow.WorkCatagory">
+                @foreach (var workcatergory in Enum.GetValues(typeof(WorkCatagory)))
+                {
+                    <option value="@workcatergory">@workcatergory</option>
+                }
+            </InputSelect>
         </label>
     </p>
 
