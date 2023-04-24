@@ -1,9 +1,11 @@
 ﻿@page "/worktable"
 @inject HttpClient Http
+@inject NavigationManager Navigation
 @using System.ComponentModel.DataAnnotations;
 @using System.ComponentModel;
 @using Models;
 @using Data;
+@using Managers;
 
 <PageTitle>Felvett munkák</PageTitle>
 
@@ -12,40 +14,94 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Car type and license plate number</th>
-            <th>Year of manufacture</th>
-            <th>Work type</th>
-            <th>Problem description</th>
-            <th>How bad is it</th>
-            <th></th>
+            <th @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</th>
+            <th @onclick=@(e=>SortColumn(e,1))>@attributeManager.attribute[1].show()</th>
+            <th @onclick=@(e=>SortColumn(e,2))>@attributeManager.attribute[2].show()</th>
+            <th @onclick=@(e=>SortColumn(e,3))>@attributeManager.attribute[3].show()</th>
+            <th @onclick=@(e=>SortColumn(e,4))>@attributeManager.attribute[4].show()</th>
+            <th @onclick=@(e=>SortColumn(e,5))>@attributeManager.attribute[5].show()</th>
+            <th @onclick=@(e=>SortColumn(e,6))>@attributeManager.attribute[6].show()</th>
+            <th @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</th>
+            <td></td>
         </tr>
     </thead>
     <tbody>
-            
-
         @foreach (var work in workFlow)
         {
             <tr>
-                <td>@work.ClientFirstName @work.ClientLastName</td>
-                <td>@work.CarType @work.LicencePlateNumber</td>
+                <td>@work.ClientFirstName</td>
+                <td>@work.ClientLastName</td>
+                <td>@work.CarType</td>
+                <td>@work.LicencePlateNumber</td>
                 <td>@work.ManufactureYear</td>
                 <td>@work.WorkCatagory</td>
-                <td>@work.Description</td>
+                <td @onclick=@(e=>clickOnDescription(e,work.WorkflowId))>@textShortener(work.WorkflowId,work.Description)</td>
                 <td>@work.IssueSeriousness</td>
-                <td><input type="button" value="Edit"/></td>
+                <button>Edit</button>
             </tr>
         }
+
     </tbody>
 </table>
 
 
 @code {
     private Workflow[]? workFlow = new Workflow[0];
+    private AttributeManager attributeManager = new AttributeManager();
+    //private PageManager pageManager = new PageManager();
+    private int selectedDescription = -1;
 
     protected override async Task OnInitializedAsync()
     {
-    var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiurl + "/GetWorkflows", new { });
-    workFlow = await response.Content.ReadFromJsonAsync<Workflow[]>();
+        //var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiurl + "/GetWorkflows", new { });
+        //workFlow = await response.Content.ReadFromJsonAsync<Workflow[]>();
+
+        await getDataFromDatabase();
+    }
+
+    /*
+    private void EditRow(int id)
+    {
+        //Index.OnEditRowAsync(id);
+        //Navigation.NavigateTo("");
+    }
+    */
+
+    private void clickOnDescription(MouseEventArgs e, int id)
+    {
+        if (selectedDescription == id) selectedDescription = -1;
+        else selectedDescription = id;
+    }
+
+    private string textShortener(int id, string text)
+    {
+        if (selectedDescription != id && text.Length > 20)
+        {
+            text = text.Substring(0, 20);
+            text = text + "...";
+        }
+        return text;
+    }
+
+    protected async Task getDataFromDatabase()
+    {
+        var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiurl + "/GetWorkflows", new { /*PageSize = pageManager.pageSize, PageNumber = pageManager.currentPage,*/ OrderField = attributeManager.getActiveVariableName(), OrderDescand = attributeManager.getActiveDescending() });
+        workFlow = await response.Content.ReadFromJsonAsync<Workflow[]>();
+    }
+
+    private async Task SortColumn(MouseEventArgs e, int bId)
+    {
+        if (attributeManager.activeAttributeId == bId)
+        {
+            if (attributeManager.attribute[bId].getSortIndicator() == 1) attributeManager.attribute[bId].setSortIndicator(2);
+            else attributeManager.attribute[bId].setSortIndicator(1);
+        }
+        else
+        {
+            attributeManager.attribute[attributeManager.activeAttributeId].setSortIndicator(0);
+            attributeManager.attribute[bId].setSortIndicator(1);
+            attributeManager.activeAttributeId = bId;
+        }
+        await getDataFromDatabase();
     }
 }

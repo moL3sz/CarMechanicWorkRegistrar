@@ -3,12 +3,13 @@
 @using Models
 @using Data
 @using Managers
-
+@using Enums
 
 <PageTitle>Job Status</PageTitle>
 
 <h1>Job Status</h1>
 
+<EditForm Model=@jobs>
 @if (jobs == null)
 {
     <p><em>Loading...</em></p>
@@ -53,14 +54,13 @@ else
         <thead>
             <tr>
                 <td>
-                    <label for="pageSizeDropbox">Page size:</label>
-
-                    <select name="pageSizeDropbox" id="pageSizeDropbox">
-                        <option value="ps5">@dummy</option>
-                        <option value="ps10">10</option>
-                        <option value="ps15">15</option>
-                        <option value="ps30">30</option>
-                    </select>
+                    <label for="pageSizeDropbox">Page size: @dummy</label>
+                    <InputSelect id="name" @bind-Value="">
+                        @foreach (var workcatergory in Enum.GetValues(typeof(WorkCatagory)))
+                        {
+                            <option value="@workcatergory" >@workcatergory</option>
+                        }
+                    </InputSelect>
                 </td>
                 <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button> </td>
                 <td> @pageManager.showPageCount() </td>
@@ -69,6 +69,7 @@ else
         </thead>
     </table>
 }
+</EditForm>
 
 @code {
     private Workflow[]? jobs;

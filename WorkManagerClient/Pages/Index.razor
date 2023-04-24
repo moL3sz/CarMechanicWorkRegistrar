@@ -3,10 +3,10 @@
 @using WorkManagerClient.Models
 @using Microsoft.Extensions.Logging
 @using Data;
+@using Enums;
 @inject HttpClient Http
 @inject ILogger<Index> Logger
 @inject NavigationManager Navigation
-
 
 <h2>Autó javítás felvétele</h2>
 
@@ -52,7 +52,12 @@
     <p>
         <label>
             Munka kategória:
-            <InputSelect id="name" @bind-Value="workflow.WorkCatagory" />
+            <InputSelect id="name" @bind-Value="workflow.WorkCatagory">
+                @foreach (var workcatergory in Enum.GetValues(typeof(WorkCatagory)))
+                {
+                    <option value="@workcatergory">@workcatergory</option>
+                }
+            </InputSelect>
         </label>
     </p>
 
@@ -98,4 +103,11 @@
             Logger.LogInformation("Invalid submit");
         }
     }
+
+    /*
+    public async void OnEditRowAsync(int id){
+        var response = await Http.GetFromJsonAsync<Workflow>(GlobalStaticVariables.apiurl + string.Format("/GetWorkflow/{0}", id));
+        workflow = response;
+    }
+    */
 }
