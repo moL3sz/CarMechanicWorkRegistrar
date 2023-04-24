@@ -18,16 +18,16 @@ else
     <table class="table">
         <thead>
             <tr>
-                <td @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</td>
-                <td @onclick=@(e=>SortColumn(e,1))>@attributeManager.attribute[1].show()</td>
-                <td @onclick=@(e=>SortColumn(e,2))>@attributeManager.attribute[2].show()</td>
-                <td @onclick=@(e=>SortColumn(e,3))>@attributeManager.attribute[3].show()</td>
-                <td @onclick=@(e=>SortColumn(e,4))>@attributeManager.attribute[4].show()</td>
-                <td @onclick=@(e=>SortColumn(e,5))>@attributeManager.attribute[5].show()</td>
-                <td @onclick=@(e=>SortColumn(e,6))>@attributeManager.attribute[6].show()</td>
-                <td @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</td>
-                <td @onclick=@(e=>SortColumn(e,8))>@attributeManager.attribute[8].show()</td>
-                <td @onclick=@(e=>SortColumn(e,9))>@attributeManager.attribute[9].show()</td>
+                <th @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</th>
+                <th @onclick=@(e=>SortColumn(e,1))>@attributeManager.attribute[1].show()</th>
+                <th @onclick=@(e=>SortColumn(e,2))>@attributeManager.attribute[2].show()</th>
+                <th @onclick=@(e=>SortColumn(e,3))>@attributeManager.attribute[3].show()</th>
+                <th @onclick=@(e=>SortColumn(e,4))>@attributeManager.attribute[4].show()</th>
+                <th @onclick=@(e=>SortColumn(e,5))>@attributeManager.attribute[5].show()</th>
+                <th @onclick=@(e=>SortColumn(e,6))>@attributeManager.attribute[6].show()</th>
+                <th @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</th>
+                <th @onclick=@(e=>SortColumn(e,8))>@attributeManager.attribute[8].show()</th>
+                <th @onclick=@(e=>SortColumn(e,9))>@attributeManager.attribute[9].show()</th>
             </tr>
         </thead>
         <tbody>
@@ -75,7 +75,6 @@ else
     private AttributeManager attributeManager = new AttributeManager();
     private PageManager pageManager = new PageManager();
     private int selectedDescription = -1;
-
 
     public int dummy = 111;
     public void test()
