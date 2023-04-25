@@ -53,15 +53,6 @@ else
     <table class="options">
         <thead>
             <tr>
-                <td>
-                    <label for="pageSizeDropbox">Page size: @dummy</label>
-                    <InputSelect id="name" @bind-Value="">
-                        @foreach (var workcatergory in Enum.GetValues(typeof(WorkCatagory)))
-                        {
-                            <option value="@workcatergory" >@workcatergory</option>
-                        }
-                    </InputSelect>
-                </td>
                 <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button> </td>
                 <td> @pageManager.showPageCount() </td>
                 <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Next </button> </td>
