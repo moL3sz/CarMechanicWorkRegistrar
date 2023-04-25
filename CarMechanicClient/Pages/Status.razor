@@ -16,6 +16,11 @@
 }
 else
 {
+
+    <td>
+        <label for="textInput">Search:</label>
+        <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
+    </td>
     <table class="table table-striped table-bordered table-sm">
         <thead class="thead-dark">
             <tr>
@@ -45,7 +50,7 @@ else
                     <td @onclick=@(e=>clickOnDescription(e,job.WorkflowId))>@textShortener(job.WorkflowId,job.Description)</td>
                     <td>@job.IssueSeriousness</td>
                     <td>@job.CreatedDate</td>
-                    <td>@job.WorktimeEstimination.ToString("0.00")</td>
+                    <td>@fancyWorktimeText(@job.WorktimeEstimination)</td>
                     <button class="btn @buttonStatusColor(job)" @onclick=@(e=>ProceedWorkStatus(e,job))>@job.WorkStatus</button>
                 </tr>
             }
@@ -67,10 +72,6 @@ else
                 <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button> </td>
                 <td> @pageManager.showPageCount() </td>
                 <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Next </button> </td>
-                <td>
-                    <label for="textInput">Search:</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
-                </td>
             </tr>
         </thead>
     </table>
@@ -82,7 +83,7 @@ else
     private PageManager pageManager = new PageManager();
     private int selectedDescription = -1;
     private string searchBarText = "";
-    
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,9 +137,17 @@ else
         else selectedDescription = id;
     }
 
+    private string fancyWorktimeText(double time)
+    {
+        int hour = (int)time;
+        double minute = (time - hour) * 60;
+        return hour.ToString() + ":" + minute.ToString("00") + " hours";
+    }
+
     public async Task searchBarOnChange(string text, Func<Task> callback)
     {
         searchBarText = text;
+
         await callback();
         //TODO: send the search term to API
     }
