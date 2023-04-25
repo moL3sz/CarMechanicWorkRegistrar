@@ -4,12 +4,12 @@
 @using Data
 @using Managers
 @using Enums
+@using System.Collections.Generic;
 
 <PageTitle>Job Status</PageTitle>
 
 <h1>Job Status</h1>
 
-<EditForm Model=@jobs>
 @if (jobs == null)
 {
     <p><em>Loading...</em></p>
@@ -54,13 +54,13 @@ else
         <thead>
             <tr>
                 <td>
-                    <label for="pageSizeDropbox">Page size: @dummy</label>
-                    <InputSelect id="name" @bind-Value="">
-                        @foreach (var workcatergory in Enum.GetValues(typeof(WorkCatagory)))
-                        {
-                            <option value="@workcatergory" >@workcatergory</option>
-                        }
-                    </InputSelect>
+                    <label for="pageSizeDropdown">Page Size:</label>
+                    <select id="pageSizeDropdown" name="pageSizeDropdown" onchange="@((ChangeEventArgs e) => pageManager.setPageSize(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                    </select>
                 </td>
                 <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button> </td>
                 <td> @pageManager.showPageCount() </td>
@@ -69,19 +69,12 @@ else
         </thead>
     </table>
 }
-</EditForm>
 
 @code {
     private Workflow[]? jobs;
     private AttributeManager attributeManager = new AttributeManager();
     private PageManager pageManager = new PageManager();
     private int selectedDescription = -1;
-
-    public int dummy = 111;
-    public void test()
-    {
-        dummy = 55;
-    }
 
 
     protected override async Task OnInitializedAsync()
@@ -153,6 +146,7 @@ else
         public void calcMaxPage()
         {
             maxPage = maxElement / pageSize;
+            currentPage = 1;
         }
 
         public async Task changePage(MouseEventArgs e,int change, Func<Task> callback)
@@ -164,6 +158,13 @@ else
         public string showPageCount()
         {
             return currentPage + " / " + maxPage;
+        }
+
+        public async Task setPageSize(string value, Func<Task> callback)
+        {
+            pageSize = int.Parse(value);
+            calcMaxPage();
+            await callback();
         }
     }
 }
