@@ -65,6 +65,10 @@ else
                 <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button> </td>
                 <td> @pageManager.showPageCount() </td>
                 <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Next </button> </td>
+                <td>
+                    <label for="textInput">Search:</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
+                </td>
             </tr>
         </thead>
     </table>
@@ -75,6 +79,7 @@ else
     private AttributeManager attributeManager = new AttributeManager();
     private PageManager pageManager = new PageManager();
     private int selectedDescription = -1;
+    private string searchBarText = "";
 
 
     protected override async Task OnInitializedAsync()
@@ -129,42 +134,11 @@ else
         else selectedDescription = id;
     }
 
-
-    class PageManager
+    public async Task searchBarOnChange(string text, Func<Task> callback)
     {
-        public int maxElement { get; set; }
-        public int maxPage { get; set; }
-        public int currentPage { get; set; }
-        public int pageSize { get; set; }
-
-
-        public PageManager(){
-            pageSize = 10;
-            currentPage = 1;
-        }
-
-        public void calcMaxPage()
-        {
-            maxPage = maxElement / pageSize;
-            currentPage = 1;
-        }
-
-        public async Task changePage(MouseEventArgs e,int change, Func<Task> callback)
-        {
-            if (currentPage + change >= 1 && currentPage + change <= maxPage) currentPage += change;
-            await callback();
-        }
-
-        public string showPageCount()
-        {
-            return currentPage + " / " + maxPage;
-        }
-
-        public async Task setPageSize(string value, Func<Task> callback)
-        {
-            pageSize = int.Parse(value);
-            calcMaxPage();
-            await callback();
-        }
+        searchBarText = text;
+        await callback();
+        //TODO: send the search term to API
     }
-}
+
+ }
