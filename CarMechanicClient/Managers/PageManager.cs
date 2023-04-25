@@ -19,6 +19,7 @@ namespace CarMechanicClient.Managers
         public void calcMaxPage()
         {
             maxPage = maxElement / pageSize;
+            if (maxElement % pageSize != 0) maxPage++;
             currentPage = 1;
         }
 
