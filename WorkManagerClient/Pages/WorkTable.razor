@@ -12,6 +12,7 @@
 <h1>Felvett munkák</h1>
 
 <table class="table">
+
     <thead>
         <tr>
             <th @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</th>
@@ -59,13 +60,13 @@
         await getDataFromDatabase();
     }
 
-    /*
+    
     private void EditRow(int id)
     {
         //Index.OnEditRowAsync(id);
         //Navigation.NavigateTo("");
     }
-    */
+    
 
     private void clickOnDescription(MouseEventArgs e, int id)
     {
