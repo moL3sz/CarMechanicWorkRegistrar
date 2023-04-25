@@ -4,31 +4,32 @@
 @using Data
 @using Managers
 @using Enums
+@using System.Collections.Generic;
 
 <PageTitle>Job Status</PageTitle>
 
 <h1>Job Status</h1>
 
-<EditForm Model=@jobs>
 @if (jobs == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table">
-        <thead>
+    <table class="table table-striped table-bordered table-sm">
+        <thead class="thead-dark">
             <tr>
-                <td @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</td>
-                <td @onclick=@(e=>SortColumn(e,1))>@attributeManager.attribute[1].show()</td>
-                <td @onclick=@(e=>SortColumn(e,2))>@attributeManager.attribute[2].show()</td>
-                <td @onclick=@(e=>SortColumn(e,3))>@attributeManager.attribute[3].show()</td>
-                <td @onclick=@(e=>SortColumn(e,4))>@attributeManager.attribute[4].show()</td>
-                <td @onclick=@(e=>SortColumn(e,5))>@attributeManager.attribute[5].show()</td>
-                <td @onclick=@(e=>SortColumn(e,6))>@attributeManager.attribute[6].show()</td>
-                <td @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</td>
-                <td @onclick=@(e=>SortColumn(e,8))>@attributeManager.attribute[8].show()</td>
-                <td @onclick=@(e=>SortColumn(e,9))>@attributeManager.attribute[9].show()</td>
+                <th @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</th>
+                <th @onclick=@(e=>SortColumn(e,1))>@attributeManager.attribute[1].show()</th>
+                <th @onclick=@(e=>SortColumn(e,2))>@attributeManager.attribute[2].show()</th>
+                <th @onclick=@(e=>SortColumn(e,3))>@attributeManager.attribute[3].show()</th>
+                <th @onclick=@(e=>SortColumn(e,4))>@attributeManager.attribute[4].show()</th>
+                <th @onclick=@(e=>SortColumn(e,5))>@attributeManager.attribute[5].show()</th>
+                <th @onclick=@(e=>SortColumn(e,6))>@attributeManager.attribute[6].show()</th>
+                <th @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</th>
+                <th @onclick=@(e=>SortColumn(e,8))>@attributeManager.attribute[8].show()</th>
+                <th @onclick=@(e=>SortColumn(e,9))>@attributeManager.attribute[9].show()</th>
+                <th @onclick=@(e=>SortColumn(e,10))>@attributeManager.attribute[10].show()</th>
             </tr>
         </thead>
         <tbody>
@@ -44,7 +45,8 @@ else
                     <td @onclick=@(e=>clickOnDescription(e,job.WorkflowId))>@textShortener(job.WorkflowId,job.Description)</td>
                     <td>@job.IssueSeriousness</td>
                     <td>@job.CreatedDate</td>
-                    <button class="btn btn-info" @onclick=@(e=>ProceedWorkStatus(e,job))>@job.WorkStatus</button>
+                    <td>@job.WorktimeEstimination.ToString("0.00")</td>
+                    <button class="btn @buttonStatusColor(job)" @onclick=@(e=>ProceedWorkStatus(e,job))>@job.WorkStatus</button>
                 </tr>
             }
             
@@ -53,28 +55,34 @@ else
     <table class="options">
         <thead>
             <tr>
+                <td>
+                    <label for="pageSizeDropdown">Page Size:</label>
+                    <select id="pageSizeDropdown" name="pageSizeDropdown" onchange="@((ChangeEventArgs e) => pageManager.setPageSize(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                    </select>
+                </td>
                 <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button> </td>
                 <td> @pageManager.showPageCount() </td>
                 <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Next </button> </td>
+                <td>
+                    <label for="textInput">Search:</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
+                </td>
             </tr>
         </thead>
     </table>
 }
-</EditForm>
 
 @code {
     private Workflow[]? jobs;
     private AttributeManager attributeManager = new AttributeManager();
     private PageManager pageManager = new PageManager();
     private int selectedDescription = -1;
-
-
-    public int dummy = 111;
-    public void test()
-    {
-        dummy = 55;
-    }
-
+    private string searchBarText = "";
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -128,34 +136,27 @@ else
         else selectedDescription = id;
     }
 
-
-    class PageManager
+    public async Task searchBarOnChange(string text, Func<Task> callback)
     {
-        public int maxElement { get; set; }
-        public int maxPage { get; set; }
-        public int currentPage { get; set; }
-        public int pageSize { get; set; }
+        searchBarText = text;
+        await callback();
+        //TODO: send the search term to API
+    }
 
-
-        public PageManager(){
-            pageSize = 10;
-            currentPage = 1;
-        }
-
-        public void calcMaxPage()
+    public string buttonStatusColor(Workflow job)
+    {
+        
+        if (job != null)
         {
-            maxPage = maxElement / pageSize;
+            switch (job.WorkStatus)
+            {
+                case WorkStatus.ACCEPTED: return "btn-info";
+                case WorkStatus.WORKING_PROGRESS: return "btn-warning";
+                case WorkStatus.DONE: return "btn-success";
+                default: return "btn-primary";
+            }
         }
-
-        public async Task changePage(MouseEventArgs e,int change, Func<Task> callback)
-        {
-            if (currentPage + change >= 1 && currentPage + change <= maxPage) currentPage += change;
-            await callback();
-        }
-
-        public string showPageCount()
-        {
-            return currentPage + " / " + maxPage;
-        }
+        
+        return "btn-primary";
     }
 }

@@ -35,7 +35,7 @@
             }
         }
 
-        public Attribute[] attribute = new Attribute[10];
+        public Attribute[] attribute = new Attribute[11];
 
         public AttributeManager()
         {
@@ -48,7 +48,8 @@
             attribute[6] = new Attribute("Description", "Description");
             attribute[7] = new Attribute("Issue Seriousness", "IssueSeriousness");
             attribute[8] = new Attribute("Created Date", "CreatedDate");
-            attribute[9] = new Attribute("Work Status", "WorkStatus");
+            attribute[9] = new Attribute("Worktime Estimination", "WorktimeEstimination");
+            attribute[10] = new Attribute("Work Status", "WorkStatus");
 
             attribute[0].setSortIndicator(1);
         }
