@@ -29,6 +29,7 @@ else
                 <th @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</th>
                 <th @onclick=@(e=>SortColumn(e,8))>@attributeManager.attribute[8].show()</th>
                 <th @onclick=@(e=>SortColumn(e,9))>@attributeManager.attribute[9].show()</th>
+                <th @onclick=@(e=>SortColumn(e,10))>@attributeManager.attribute[10].show()</th>
             </tr>
         </thead>
         <tbody>
@@ -44,6 +45,7 @@ else
                     <td @onclick=@(e=>clickOnDescription(e,job.WorkflowId))>@textShortener(job.WorkflowId,job.Description)</td>
                     <td>@job.IssueSeriousness</td>
                     <td>@job.CreatedDate</td>
+                    <td>@job.WorktimeEstimination.ToString("0.00")</td>
                     <button class="btn btn-info" @onclick=@(e=>ProceedWorkStatus(e,job))>@job.WorkStatus</button>
                 </tr>
             }
