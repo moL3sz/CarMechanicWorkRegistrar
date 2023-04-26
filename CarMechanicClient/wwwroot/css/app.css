@@ -62,3 +62,12 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+#textInput {
+    width: 100%;
+}
+
+
+th {
+    width: 8vw;
+}

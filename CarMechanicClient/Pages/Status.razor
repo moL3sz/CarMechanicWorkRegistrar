@@ -5,10 +5,12 @@
 @using Managers
 @using Enums
 @using System.Collections.Generic;
+@using System.Diagnostics;
 
 <PageTitle>Job Status</PageTitle>
 
 <h1>Job Status</h1>
+<h3>(Reload Count for testing = @reloadCount)</h3>
 
 @if (jobs == null)
 {
@@ -16,25 +18,53 @@
 }
 else
 {
-
-    <td>
-        <label for="textInput">Search:</label>
-        <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
-    </td>
     <table class="table table-striped table-bordered table-sm">
         <thead class="thead-dark">
             <tr>
-                <th @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</th>
-                <th @onclick=@(e=>SortColumn(e,1))>@attributeManager.attribute[1].show()</th>
-                <th @onclick=@(e=>SortColumn(e,2))>@attributeManager.attribute[2].show()</th>
-                <th @onclick=@(e=>SortColumn(e,3))>@attributeManager.attribute[3].show()</th>
-                <th @onclick=@(e=>SortColumn(e,4))>@attributeManager.attribute[4].show()</th>
-                <th @onclick=@(e=>SortColumn(e,5))>@attributeManager.attribute[5].show()</th>
-                <th @onclick=@(e=>SortColumn(e,6))>@attributeManager.attribute[6].show()</th>
-                <th @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</th>
-                <th @onclick=@(e=>SortColumn(e,8))>@attributeManager.attribute[8].show()</th>
-                <th @onclick=@(e=>SortColumn(e,9))>@attributeManager.attribute[9].show()</th>
-                <th @onclick=@(e=>SortColumn(e,10))>@attributeManager.attribute[10].show()</th>
+                <th>
+                    <label @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 0 ,async ()=>{ await getDataFromDatabase(); }))">
+                </th>
+                <th>
+                    <label @onclick=@(e=>SortColumn(e,1))>@attributeManager.attribute[1].show()</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 1 ,async ()=>{ await getDataFromDatabase(); }))">
+                </th>
+                <th>
+                    <label @onclick=@(e=>SortColumn(e,2))>@attributeManager.attribute[2].show()</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 2 ,async ()=>{ await getDataFromDatabase(); }))">
+                </th>
+                <th>
+                    <label @onclick=@(e=>SortColumn(e,3))>@attributeManager.attribute[3].show()</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 3,async ()=>{ await getDataFromDatabase(); }))">
+                </th>
+                <th>
+                    <label @onclick=@(e=>SortColumn(e,4))>@attributeManager.attribute[4].show()</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 4 ,async ()=>{ await getDataFromDatabase(); }))">
+                </th>
+                <th>
+                    <label @onclick=@(e=>SortColumn(e,5))>@attributeManager.attribute[5].show()</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 5 ,async ()=>{ await getDataFromDatabase(); }))">
+                </th>
+                <th>
+                    <label @onclick=@(e=>SortColumn(e,6))>@attributeManager.attribute[6].show()</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 6 ,async ()=>{ await getDataFromDatabase(); }))">
+                </th>
+                <th>
+                    <label @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 7 ,async ()=>{ await getDataFromDatabase(); }))">
+                </th>
+                <th>
+                    <label @onclick=@(e=>SortColumn(e,8))>@attributeManager.attribute[8].show()</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 8 ,async ()=>{ await getDataFromDatabase(); }))">
+                </th>
+                <th>
+                    <label @onclick=@(e=>SortColumn(e,9))>@attributeManager.attribute[9].show()</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 9 ,async ()=>{ await getDataFromDatabase(); }))">
+                </th>
+                <th>
+                    <label @onclick=@(e=>SortColumn(e,10))>@attributeManager.attribute[10].show()</label>
+                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 10 ,async ()=>{ await getDataFromDatabase(); }))">
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -73,27 +103,47 @@ else
                 <td> @pageManager.showPageCount() </td>
                 <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Next </button> </td>
             </tr>
+            <tr>
+                <td>@attributeManager.getSearchPrompt()</td>
+            </tr>
         </thead>
     </table>
 }
 
 @code {
+    Action<object> createHandler(int i)
+    {
+        return (value) =>
+        {
+            // use i here
+            Console.WriteLine(i);
+        };
+    }
+
+
     private Workflow[]? jobs;
     private AttributeManager attributeManager = new AttributeManager();
     private PageManager pageManager = new PageManager();
     private int selectedDescription = -1;
     private string searchBarText = "";
+    private double searchDebounce = 0;
+    Stopwatch stopwatch = new Stopwatch();
 
+    public int reloadCount = 0;
 
     protected override async Task OnInitializedAsync()
     {
         await getDataFromDatabase();
         pageManager.maxElement = await Http.GetFromJsonAsync<int>(GlobalStaticVariables.apiURL + "/GetWorkflowSize");
         pageManager.calcMaxPage();
+        stopwatch.Start();
     }
 
     protected async Task getDataFromDatabase()
     {
+        reloadCount++;
+        attributeManager.generateSearchPrompt();
+
         var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiURL + "/GetWorkflows", new { PageSize = pageManager.pageSize, PageNumber = pageManager.currentPage, OrderField = attributeManager.getActiveVariableName(), OrderDescand = attributeManager.getActiveDescending() });
         jobs = await response.Content.ReadFromJsonAsync<Workflow[]>();
     }
@@ -144,11 +194,17 @@ else
         return hour.ToString() + ":" + minute.ToString("00") + " hours";
     }
 
-    public async Task searchBarOnChange(string text, Func<Task> callback)
+    public async Task searchBarOnChange(string text, int id, Func<Task> callback)
     {
-        searchBarText = text;
+        attributeManager.attribute[id].setSearchbarText(text);
 
-        await callback();
+        await Task.Delay(1500);
+
+        if (stopwatch.Elapsed.TotalMilliseconds - searchDebounce > 1500)
+        {
+            searchDebounce = stopwatch.Elapsed.TotalMilliseconds;
+            await callback();
+        }
         //TODO: send the search term to API
     }
 

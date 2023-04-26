@@ -7,6 +7,7 @@
             private string fieldName;
             private string variableName;
             private int sortIndicator = 0; // 0-NoSort 1-Decrease 2-Increase
+            private string searchbarText = "";
 
             public Attribute(string fieldName_, string variableName_)
             {
@@ -21,6 +22,8 @@
             public void setVariableName(string value) { variableName = value; }
             public int getSortIndicator() { return sortIndicator; }
             public void setSortIndicator(int value) { sortIndicator = value; }
+            public string getSearchbarText() { return searchbarText; }
+            public void setSearchbarText(string value) { searchbarText = value; }
 
             public string getSimbol()
             {
@@ -55,6 +58,7 @@
         }
 
         public int activeAttributeId = 0;
+        private string searchPrompt = "";
 
         public string getActiveVariableName()
         {
@@ -64,6 +68,25 @@
         {
             if (attribute[activeAttributeId].getSortIndicator() == 1) return false;
             else return true;
+        }
+
+        public string getSearchPrompt(){ return searchPrompt; }
+
+        public void generateSearchPrompt()
+        {
+            // [{ "Workstatus":"DONE"},{ "CarType": "Merci"}]
+            string text = "[";
+            foreach (Attribute att in attribute)
+            {
+                if(att.getSearchbarText() != "")
+                {
+                    text = text + "{ \"" + att.getVariableName() + "\":\"" + att.getSearchbarText() + "\"},";
+                }
+            }
+            text = text.Substring(0, text.Length - 1);
+
+            searchPrompt = text + "]";
+            if (searchPrompt == "]") searchPrompt = null;
         }
     }
 }
