@@ -44,13 +44,36 @@
 
     </tbody>
 </table>
+<table class="options">
+    <thead>
+        <tr>
+            <td>
+                <label for="pageSizeDropdown">Page Size:</label>
+                <select id="pageSizeDropdown" name="pageSizeDropdown" onchange="@((ChangeEventArgs e) => pageManager.setPageSize(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                </select>
+            </td>
+            <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button> </td>
+            <td> @pageManager.showPageCount() </td>
+            <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Next </button> </td>
+            <td>
+                <label for="textInput">Search:</label>
+                <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
+            </td>
+        </tr>
+    </thead>
+</table>
 
 
 @code {
     private Workflow[]? workFlow = new Workflow[0];
     private AttributeManager attributeManager = new AttributeManager();
-    //private PageManager pageManager = new PageManager();
+    private PageManager pageManager = new PageManager();
     private int selectedDescription = -1;
+    private string searchBarText = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,15 +81,10 @@
         //workFlow = await response.Content.ReadFromJsonAsync<Workflow[]>();
 
         await getDataFromDatabase();
+        pageManager.maxElement = await Http.GetFromJsonAsync<int>(GlobalStaticVariables.apiurl + "/GetWorkflowSize");
+        pageManager.calcMaxPage();
     }
 
-    
-    private void EditRow(int id)
-    {
-        //Index.OnEditRowAsync(id);
-        //Navigation.NavigateTo("");
-    }
-    
 
     private void clickOnDescription(MouseEventArgs e, int id)
     {
@@ -84,9 +102,16 @@
         return text;
     }
 
+    public async Task searchBarOnChange(string text, Func<Task> callback)
+    {
+        searchBarText = text;
+        await callback();
+        //TODO: send the search term to API
+    }
+
     protected async Task getDataFromDatabase()
     {
-        var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiurl + "/GetWorkflows", new { /*PageSize = pageManager.pageSize, PageNumber = pageManager.currentPage,*/ OrderField = attributeManager.getActiveVariableName(), OrderDescand = attributeManager.getActiveDescending() });
+        var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiurl + "/GetWorkflows", new { PageSize = pageManager.pageSize, PageNumber = pageManager.currentPage, OrderField = attributeManager.getActiveVariableName(), OrderDescand = attributeManager.getActiveDescending() });
         workFlow = await response.Content.ReadFromJsonAsync<Workflow[]>();
     }
 
