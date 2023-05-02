@@ -19,7 +19,7 @@ namespace WorkManagerClient.Models
         public string CarType { get; set; }
 
         [Required(ErrorMessage = "A rendszám kötelező!")]
-        [RegularExpression(pattern: "^[A-Z]{3}[- ]?[0-9]{3}", ErrorMessage = "A rendszám rossz formátumban van megadva! Példa: ABC-123")]
+        [RegularExpression(pattern: @"^[A-Z]{3}[- ]?[0-9]{3}", ErrorMessage = "A rendszám rossz formátumban van megadva! Példa: ABC-123")]
         public string LicencePlateNumber { get; set; }
 
 
