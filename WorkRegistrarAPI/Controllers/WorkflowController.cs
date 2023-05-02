@@ -173,7 +173,6 @@
                 this._logger.LogError(ex.Message, ex);
                 return BadRequest(500);
             }
-;
         }
     }
 }
