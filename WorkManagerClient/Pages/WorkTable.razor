@@ -3,6 +3,7 @@
 @inject NavigationManager Navigation
 @using System.ComponentModel.DataAnnotations;
 @using System.ComponentModel;
+@using Microsoft.Extensions.Logging
 @using Models;
 @using Data;
 @using Managers;
@@ -38,7 +39,7 @@
                 <td>@work.WorkCatagory</td>
                 <td @onclick=@(e=>clickOnDescription(e,work.WorkflowId))>@textShortener(work.WorkflowId,work.Description)</td>
                 <td>@work.IssueSeriousness</td>
-                <button>Edit</button>
+                <button @onclick=@(e=>clickOnEdit(e, work.WorkflowId))>Edit</button>
             </tr>
         }
 
@@ -85,6 +86,9 @@
         pageManager.calcMaxPage();
     }
 
+    private async void clickOnEdit(MouseEventArgs e, int id){
+        Navigation.NavigateTo($"/{id}");
+    }
 
     private void clickOnDescription(MouseEventArgs e, int id)
     {

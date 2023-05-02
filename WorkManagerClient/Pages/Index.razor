@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/{Id:int?}"
 @using System.ComponentModel.DataAnnotations
 @using WorkManagerClient.Models
 @using Microsoft.Extensions.Logging
@@ -83,31 +83,37 @@
 
 @code {
     private Workflow workflow = new();
-    public EditContext? editContext;
+    [Parameter]
+    public int Id { get; set; }
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        editContext = new(workflow);
+        if (Id != 0)
+            workflow = await Http.GetFromJsonAsync<Workflow>(GlobalStaticVariables.apiurl + "/GetWorkflow/" + Id);
     }
 
     private async void HandleValidSubmit()
     {
-        var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiurl + "/Insert", workflow);
 
-        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        if (Id != 0)
         {
-            Navigation.NavigateTo("worktable");
+            var response = await Http.PutAsJsonAsync(GlobalStaticVariables.apiurl + "/Update", workflow);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                Navigation.NavigateTo("worktable");
+            }
         }
         else
         {
-            Logger.LogInformation("Invalid submit");
+            var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiurl + "/Insert", workflow);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                Navigation.NavigateTo("worktable");
+            }
+            else
+            {
+                Logger.LogInformation("Invalid submit");
+            }
         }
     }
-
-    /*
-    public async void OnEditRowAsync(int id){
-        var response = await Http.GetFromJsonAsync<Workflow>(GlobalStaticVariables.apiurl + string.Format("/GetWorkflow/{0}", id));
-        workflow = response;
-    }
-    */
 }
