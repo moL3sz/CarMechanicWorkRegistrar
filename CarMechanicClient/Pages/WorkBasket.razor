@@ -1,11 +1,12 @@
 ﻿@page "/"
 @inject HttpClient Http
-@using Models
-@using Data
-@using Managers
-@using Enums
+@using Models;
+@using Data;
+@using Managers;
+@using Enums;
 @using System.Collections.Generic;
 @using System.Diagnostics;
+
 
 <PageTitle>Job Status</PageTitle>
 
@@ -23,47 +24,42 @@ else
             <tr>
                 <th>
                     <label @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 0 ,async ()=>{ await getDataFromDatabase(); }))">
+                    <input class="form-control form-control-sm" type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 0 ,async ()=>{ await getDataFromDatabase(); }))">
                 </th>
                 <th>
                     <label @onclick=@(e=>SortColumn(e,1))>@attributeManager.attribute[1].show()</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 1 ,async ()=>{ await getDataFromDatabase(); }))">
+                    <input class="form-control form-control-sm" type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 1 ,async ()=>{ await getDataFromDatabase(); }))">
                 </th>
                 <th>
                     <label @onclick=@(e=>SortColumn(e,2))>@attributeManager.attribute[2].show()</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 2 ,async ()=>{ await getDataFromDatabase(); }))">
+                    <input class="form-control form-control-sm" type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 2 ,async ()=>{ await getDataFromDatabase(); }))">
                 </th>
                 <th>
                     <label @onclick=@(e=>SortColumn(e,3))>@attributeManager.attribute[3].show()</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 3,async ()=>{ await getDataFromDatabase(); }))">
+                    <input class="form-control form-control-sm" type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 3,async ()=>{ await getDataFromDatabase(); }))">
                 </th>
                 <th>
                     <label @onclick=@(e=>SortColumn(e,4))>@attributeManager.attribute[4].show()</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 4 ,async ()=>{ await getDataFromDatabase(); }))">
+                    <input class="form-control form-control-sm" type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 4 ,async ()=>{ await getDataFromDatabase(); }))">
                 </th>
                 <th>
                     <label @onclick=@(e=>SortColumn(e,5))>@attributeManager.attribute[5].show()</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 5 ,async ()=>{ await getDataFromDatabase(); }))">
+                    <input class="form-control form-control-sm" type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 5 ,async ()=>{ await getDataFromDatabase(); }))">
                 </th>
                 <th>
                     <label @onclick=@(e=>SortColumn(e,6))>@attributeManager.attribute[6].show()</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 6 ,async ()=>{ await getDataFromDatabase(); }))">
+                    <input class="form-control form-control-sm" type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 6 ,async ()=>{ await getDataFromDatabase(); }))">
                 </th>
                 <th>
                     <label @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 7 ,async ()=>{ await getDataFromDatabase(); }))">
-                </th>
-                <th>
-                    <label @onclick=@(e=>SortColumn(e,8))>@attributeManager.attribute[8].show()</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 8 ,async ()=>{ await getDataFromDatabase(); }))">
+                    <input class="form-control form-control-sm"  type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 7 ,async ()=>{ await getDataFromDatabase(); }))">
                 </th>
                 <th>
                     <label @onclick=@(e=>SortColumn(e,9))>@attributeManager.attribute[9].show()</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 9 ,async ()=>{ await getDataFromDatabase(); }))">
+                    <input class="form-control form-control-sm" type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 9 ,async ()=>{ await getDataFromDatabase(); }))">
                 </th>
                 <th>
                     <label @onclick=@(e=>SortColumn(e,10))>@attributeManager.attribute[10].show()</label>
-                    <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(), 10 ,async ()=>{ await getDataFromDatabase(); }))">
                 </th>
             </tr>
         </thead>
@@ -76,38 +72,41 @@ else
                     <td>@job.CarType</td>
                     <td>@job.LicencePlateNumber</td>
                     <td>@job.ManuFactureYear</td>
-                    <td>@job.WorkCatagory</td>
+                    <td>@job.WorkCatagory.GetDescription()</td>
                     <td @onclick=@(e=>clickOnDescription(e,job.WorkflowId))>@textShortener(job.WorkflowId,job.Description)</td>
                     <td>@job.IssueSeriousness</td>
-                    <td>@job.CreatedDate</td>
                     <td>@fancyWorktimeText(@job.WorktimeEstimination)</td>
-                    <button class="btn @buttonStatusColor(job)" @onclick=@(e=>ProceedWorkStatus(e,job))>@job.WorkStatus</button>
+                    <td class="text-center">
+                        <button class="btn @buttonStatusColor(job)" @onclick=@(e=>ProceedWorkStatus(e,job))>@job.WorkStatus</button>
+
+                    </td>
                 </tr>
             }
-            
+
         </tbody>
     </table>
-    <table class="options">
-        <thead>
-            <tr>
-                <td>
-                    <label for="pageSizeDropdown">Page Size:</label>
-                    <select id="pageSizeDropdown" name="pageSizeDropdown" onchange="@((ChangeEventArgs e) => pageManager.setPageSize(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
-                        <option value="5">5</option>
-                        <option value="10" selected>10</option>
-                        <option value="15">15</option>
-                        <option value="30">30</option>
-                    </select>
-                </td>
-                <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button> </td>
-                <td> @pageManager.showPageCount() </td>
-                <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Next </button> </td>
-            </tr>
-            <tr>
-                <td>@attributeManager.getSearchPrompt()</td>
-            </tr>
-        </thead>
-    </table>
+    <div class="options">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="">
+                <label for="pageSizeDropdown">Page Size:</label>
+                <select id="pageSizeDropdown" class="form-control form-control-sm" style="width: 10rem;" name="pageSizeDropdown" onchange="@((ChangeEventArgs e) => pageManager.setPageSize(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                </select>
+            </div>
+
+            <div class="float-end d-flex flex-row justify-content-center align-items-center">
+                <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button>
+                <div class="mx-4">@pageManager.showPageCount()</div>
+                <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Next </button>
+            </div>
+        </div>
+
+
+
+    </div>
 }
 
 @code {
@@ -144,22 +143,22 @@ else
         reloadCount++;
         attributeManager.generateSearchPrompt();
 
-        var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiURL + "/GetWorkflows", new { PageSize = pageManager.pageSize, PageNumber = pageManager.currentPage, OrderField = attributeManager.getActiveVariableName(), OrderDescand = attributeManager.getActiveDescending() });
+        var response = await Http.PostAsJsonAsync(GlobalStaticVariables.apiURL + "/GetWorkflows", new { PageSize = pageManager.pageSize, PageNumber = pageManager.currentPage, OrderField = attributeManager.getActiveVariableName(), OrderDescand = attributeManager.getActiveDescending(),  });
         jobs = await response.Content.ReadFromJsonAsync<Workflow[]>();
     }
 
     private async Task ProceedWorkStatus(MouseEventArgs e, Workflow job)
     {
-        if(job.WorkStatus != Enums.WorkStatus.DONE) job.WorkStatus++;
+        if (job.WorkStatus != Enums.WorkStatus.DONE) job.WorkStatus++;
 
         await Http.PutAsJsonAsync(GlobalStaticVariables.apiURL + "/UpdateStatus/" + job.WorkflowId, new { });
     }
 
     private async Task SortColumn(MouseEventArgs e, int bId)
     {
-        if(attributeManager.activeAttributeId == bId)
+        if (attributeManager.activeAttributeId == bId)
         {
-            if(attributeManager.attribute[bId].getSortIndicator() == 1) attributeManager.attribute[bId].setSortIndicator(2);
+            if (attributeManager.attribute[bId].getSortIndicator() == 1) attributeManager.attribute[bId].setSortIndicator(2);
             else attributeManager.attribute[bId].setSortIndicator(1);
         }
         else
@@ -171,7 +170,7 @@ else
         await getDataFromDatabase();
     }
 
-    private string textShortener(int id,string text)
+    private string textShortener(int id, string text)
     {
         if (selectedDescription != id && text.Length > 20)
         {
@@ -210,7 +209,7 @@ else
 
     public string buttonStatusColor(Workflow job)
     {
-        
+
         if (job != null)
         {
             switch (job.WorkStatus)
@@ -221,7 +220,7 @@ else
                 default: return "btn-primary";
             }
         }
-        
+
         return "btn-primary";
     }
 }
