@@ -4,82 +4,81 @@
 @using Microsoft.Extensions.Logging
 @using Data;
 @using Enums;
+@using Managers;
 @inject HttpClient Http
 @inject ILogger<Index> Logger
 @inject NavigationManager Navigation
 
 <h2>Autó javítás felvétele</h2>
 
-<EditForm Model=@workflow OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<hr/>
 
-    <p>
-        <label>
-            Vezetéknév:
-            <InputText id="name" @bind-Value="workflow.ClientFirstName" />
-        </label>
-    </p>
+<div class="w-50 form-group">
+    <EditForm Model=@workflow OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
-    <p>
-        <label>
-            Keresztnév:
-            <InputText id="name" @bind-Value="workflow.ClientLastName" />
-        </label>
-    </p>
+        <div class="form-group" style="display: grid; gap: 1rem;
+                grid-template-columns: repeat(2, minmax(0, 1fr));">
+            <label>
+                Vezetéknév:
+            </label>
+            <InputText class="form-control" id="name" @bind-Value="workflow.ClientFirstName" />
 
-    <p>
-        <label>
-            Autó típusa:
-            <InputText id="name" @bind-Value="workflow.CarType" />
-        </label>
-    </p>
 
-    <p>
-        <label>
-            Rendszám:
-            <InputText id="name" @bind-Value="workflow.LicencePlateNumber" />
-        </label>
-    </p>
+            <label>
+                Keresztnév:
+            </label>
+            <InputText class="form-control" id="name" @bind-Value="workflow.ClientLastName" />
 
-    <p>
-        <label>
-            Gyártási év:
-            <InputNumber id="name" @bind-Value="workflow.ManufactureYear" />
-        </label>
-    </p>
 
-    <p>
-        <label>
-            Munka kategória:
-            <InputSelect id="name" @bind-Value="workflow.WorkCatagory">
+            <label>
+                Autó típusa:
+            </label>
+            <InputText class="form-control" id="name" @bind-Value="workflow.CarType" />
+
+
+            <label>
+                Rendszám:
+            </label>
+            <InputText class="form-control" id="name" @bind-Value="workflow.LicencePlateNumber" />
+
+            <label>
+                Gyártási év:
+            </label>
+            <InputNumber class="form-control" id="name" @bind-Value="workflow.ManufactureYear" />
+
+
+            <label>
+                Munka kategória:
+
+            </label>
+            <InputSelect class="form-control"  id="name" @bind-Value="workflow.WorkCatagory">
                 @foreach (var workcatergory in Enum.GetValues(typeof(WorkCatagory)))
                 {
-                    <option value="@workcatergory">@workcatergory</option>
+                    <option value="@workcatergory">@(((WorkCatagory)Enum.Parse(typeof(WorkCatagory), workcatergory.ToString())).GetDescription())</option>
                 }
             </InputSelect>
-        </label>
-    </p>
 
-    <p>
-        <label>
-            Az autó hibájának rövid leírása:
-            <InputText id="name" @bind-Value="workflow.Description" />
-        </label>
-    </p>
+            <label>
+                Az autó hibájának rövid leírása:
 
-    <p>
-        <label>
-            A hiba súlyossága (1-10):
-            <InputNumber id="name" @bind-Value="workflow.IssueSeriousness" />
-        </label>
-    </p>
+            </label>
+            <InputText class="form-control"  id="name" @bind-Value="workflow.Description" />
+             <label>
+                A hiba súlyossága (1-10):
+            </label>
+            <InputNumber class="form-control" id="name" @bind-Value="workflow.IssueSeriousness" />
+        </div>
 
-    <input type="hidden" @bind-value="workflow.Active" />
-    <input type="hidden" @bind-value="workflow.WorkStatus" />
 
-    <button type="submit">Submit</button>
-</EditForm>
+        <input type="hidden" @bind-value="workflow.Active" />
+        <input type="hidden" @bind-value="workflow.WorkStatus" />
+
+        <button type="submit" class="btn btn-primary float-end mt-2">Felvétel</button>
+    </EditForm>
+</div>
+
 
 @code {
     private Workflow workflow = new();
