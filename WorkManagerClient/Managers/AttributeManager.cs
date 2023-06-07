@@ -24,9 +24,9 @@
 
             public string getSimbol()
             {
-                if (sortIndicator == 0) return "-";
-                else if (sortIndicator == 1) return "ˇ";
-                else return "^";
+                if (sortIndicator == 0) return "";
+                else if (sortIndicator == 1) return "+";
+                else return "-";
             }
 
             public string show()

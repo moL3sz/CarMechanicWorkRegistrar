@@ -60,9 +60,14 @@
 
 
         [HttpGet("{id}")]
-        public async Task<Workflow> GetWorkflow([FromRoute] int id)
+        public async Task<IActionResult> GetWorkflow([FromRoute] int id)
         {
-            return await _context.Workflows.FindAsync(id);
+            Workflow workflow = await _context.Workflows.FindAsync(id);
+            if (workflow == null)
+            {
+                return NotFound();
+            }
+            return Ok(workflow);
         }
 
         // POST: api/Workflow/Update?{workflow}
@@ -87,7 +92,7 @@
             {
                 this._logger.LogError($"[-] Insert failed with values: {JsonSerializer.Serialize(workflow)}", ex);
 
-                return this.BadRequest(500);
+                return this.BadRequest($"[-] Insert failed with values: {JsonSerializer.Serialize(workflow)}");
             }
         }
 
@@ -109,7 +114,7 @@
             catch (Exception ex)
             {
                 this._logger.LogError($"[-] Update failed with values: {JsonSerializer.Serialize(workflow)}", ex);
-                return this.BadRequest(500);
+                return this.BadRequest($"[-] Update failed with values: {JsonSerializer.Serialize(workflow)}");
 
             }
         }
@@ -126,7 +131,7 @@
                 if (currentWorkflow == null)
                 {
                     this._logger.LogError($"Workflow not found with ID: {workflowId}");
-                    return BadRequest(500);
+                    return BadRequest($"Workflow not found with ID: {workflowId}");
                 }
 
                 currentWorkflow.Active = false;
@@ -136,11 +141,11 @@
 
                 return Ok();
             }
-            catch
+            catch(Exception ex) { }
             {
                 this._logger.LogInformation($"[*] Delete failed with ID: {workflowId}");
 
-                return BadRequest(500);
+                return BadRequest($"[*] Delete failed with ID: {workflowId}");
             }
         }
 
@@ -155,7 +160,7 @@
                 if (currentWorkflow == null)
                 {
                     this._logger.LogError($"Workflow not found with ID: {workflowId}");
-                    return BadRequest(404);
+                    return NotFound();
                 }
 
                 // If the project is not in the DONE state, it will send to the next state
@@ -171,7 +176,7 @@
             catch (Exception ex)
             {
                 this._logger.LogError(ex.Message, ex);
-                return BadRequest(500);
+                return BadRequest(ex);
             }
         }
     }

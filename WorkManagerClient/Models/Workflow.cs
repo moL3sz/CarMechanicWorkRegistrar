@@ -10,6 +10,7 @@ namespace WorkManagerClient.Models
         public int WorkflowId { get; set; }
 
         [Required(ErrorMessage = "A vezetéknév kötelező!")]
+        
         public string ClientFirstName { get; set; }
 
         [Required(ErrorMessage = "A keresztnév kötelező!")]

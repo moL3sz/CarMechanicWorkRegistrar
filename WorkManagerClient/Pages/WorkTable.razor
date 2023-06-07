@@ -11,62 +11,69 @@
 <PageTitle>Felvett munkák</PageTitle>
 
 <h1>Felvett munkák</h1>
+<div class="float-end form-group mb-2">
+    <input type="text" id="textInput" placeholder="Search" name="textInput" class="form-control" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
+</div>
 
-<table class="table">
+<table class="table table-bordered thead-dark table-striped table-hover">
 
-    <thead>
+
+    <thead class="thead-light">
         <tr>
-            <th @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</th>
-            <th @onclick=@(e=>SortColumn(e,1))>@attributeManager.attribute[1].show()</th>
-            <th @onclick=@(e=>SortColumn(e,2))>@attributeManager.attribute[2].show()</th>
-            <th @onclick=@(e=>SortColumn(e,3))>@attributeManager.attribute[3].show()</th>
-            <th @onclick=@(e=>SortColumn(e,4))>@attributeManager.attribute[4].show()</th>
-            <th @onclick=@(e=>SortColumn(e,5))>@attributeManager.attribute[5].show()</th>
-            <th @onclick=@(e=>SortColumn(e,6))>@attributeManager.attribute[6].show()</th>
-            <th @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</th>
-            <td></td>
+            <th scope="col" @onclick=@(e=>SortColumn(e,0))>@attributeManager.attribute[0].show()</th>
+            <th scope="col" @onclick=@(e=>SortColumn(e,1))>@attributeManager.attribute[1].show()</th>
+            <th scope="col" @onclick=@(e=>SortColumn(e,2))>@attributeManager.attribute[2].show()</th>
+            <th scope="col" @onclick=@(e=>SortColumn(e,3))>@attributeManager.attribute[3].show()</th>
+            <th scope="col" @onclick=@(e=>SortColumn(e,4))>@attributeManager.attribute[4].show()</th>
+            <th scope="col" @onclick=@(e=>SortColumn(e,5))>@attributeManager.attribute[5].show()</th>
+            <th scope="col" @onclick=@(e=>SortColumn(e,6))>@attributeManager.attribute[6].show()</th>
+            <th scope="col" @onclick=@(e=>SortColumn(e,7))>@attributeManager.attribute[7].show()</th>
+            <td scope="col"></td>
         </tr>
     </thead>
     <tbody>
         @foreach (var work in workFlow)
         {
             <tr>
-                <td>@work.ClientFirstName</td>
-                <td>@work.ClientLastName</td>
-                <td>@work.CarType</td>
-                <td>@work.LicencePlateNumber</td>
-                <td>@work.ManufactureYear</td>
-                <td>@work.WorkCatagory</td>
-                <td @onclick=@(e=>clickOnDescription(e,work.WorkflowId))>@textShortener(work.WorkflowId,work.Description)</td>
-                <td>@work.IssueSeriousness</td>
-                <button @onclick=@(e=>clickOnEdit(e, work.WorkflowId))>Edit</button>
+                <td scope="col">@work.ClientFirstName</td>
+                <td scope="col">@work.ClientLastName</td>
+                <td scope="col">@work.CarType</td>
+                <td scope="col">@work.LicencePlateNumber</td>
+                <td scope="col">@work.ManufactureYear</td>
+                <td scope="col">@work.WorkCatagory.GetDescription()</td>
+                <td scope="col" @onclick=@(e=>clickOnDescription(e,work.WorkflowId))>@textShortener(work.WorkflowId,work.Description)</td>
+                <td scope="col">@work.IssueSeriousness</td>
+                <td scope="col">
+                    <button class="btn btn-primary" @onclick=@(e=>clickOnEdit(e, work.WorkflowId))>Edit</button>
+
+                </td>
             </tr>
         }
 
     </tbody>
 </table>
-<table class="options">
-    <thead>
-        <tr>
-            <td>
-                <label for="pageSizeDropdown">Page Size:</label>
-                <select id="pageSizeDropdown" name="pageSizeDropdown" onchange="@((ChangeEventArgs e) => pageManager.setPageSize(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
-                    <option value="5">5</option>
-                    <option value="10" selected>10</option>
-                    <option value="15">15</option>
-                    <option value="30">30</option>
-                </select>
-            </td>
-            <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button> </td>
-            <td> @pageManager.showPageCount() </td>
-            <td> <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Next </button> </td>
-            <td>
-                <label for="textInput">Search:</label>
-                <input type="text" id="textInput" name="textInput" oninput="@((ChangeEventArgs e) => searchBarOnChange(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
-            </td>
-        </tr>
-    </thead>
-</table>
+<div class="options">
+    <div class="d-flex flex-row justify-content-between align-items-center">
+        <div class="">
+            <label for="pageSizeDropdown">Page Size:</label>
+            <select id="pageSizeDropdown" class="form-control" style="width: 10rem;" name="pageSizeDropdown" onchange="@((ChangeEventArgs e) => pageManager.setPageSize(e.Value.ToString(),async ()=>{ await getDataFromDatabase(); }))">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="15">15</option>
+                <option value="30">30</option>
+            </select>
+        </div>
+
+        <div class="float-end d-flex flex-row justify-content-center align-items-center">
+            <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e,-1,async ()=>{ await getDataFromDatabase(); }))> Back </button>
+            <div class="mx-4">@pageManager.showPageCount()</div>
+            <button class="btn btn-primary" @onclick=@(e=>pageManager.changePage(e, 1,async ()=>{ await getDataFromDatabase(); }))> Next </button>
+        </div>
+    </div>
+
+
+
+</div>
 
 
 @code {
@@ -86,7 +93,8 @@
         pageManager.calcMaxPage();
     }
 
-    private async void clickOnEdit(MouseEventArgs e, int id){
+    private async void clickOnEdit(MouseEventArgs e, int id)
+    {
         Navigation.NavigateTo($"/{id}");
     }
 

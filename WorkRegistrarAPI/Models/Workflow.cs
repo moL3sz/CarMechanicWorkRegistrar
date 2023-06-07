@@ -62,17 +62,12 @@
         {
             get
             {
-                //TODO Estimation
 
                 var CategoryHour = GlobalStaticVariables.WORKCATEGORY_HOURS.GetValueOrDefault(this.WorkCatagory, 0);
                 var ManufactureRate = GlobalStaticVariables.MANUFACTURE_YEAR_RATE
                     .FirstOrDefault(x => this.CarAge >= x.Key.Item1 && this.CarAge <= x.Key.Item2).Value;
                 var IssueSeriousnessRate = GlobalStaticVariables.ISSUE_SERIOUSNESS_RATE
                     .FirstOrDefault(x => this.IssueSeriousness >= x.Key.Item1 && this.IssueSeriousness <= x.Key.Item2).Value;
-
-                Console.WriteLine(CategoryHour);
-                Console.WriteLine(ManufactureRate);
-                Console.WriteLine(IssueSeriousnessRate);
 
                 return CategoryHour * ManufactureRate * IssueSeriousnessRate;
             }
